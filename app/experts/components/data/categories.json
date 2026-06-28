@@ -1,0 +1,39 @@
+{
+  "topCategories": [
+    { "id": "therapists", "icon": "therapists", "label": "Therapists", "count": 48 },
+    { "id": "coaches", "icon": "coaches", "label": "Coaches", "count": 32 },
+    { "id": "trainers", "icon": "trainers", "label": "Trainers", "count": 41 },
+    { "id": "wellness", "icon": "wellness", "label": "Wellness", "count": 56 },
+    { "id": "health", "icon": "health", "label": "Health", "count": 37 },
+    { "id": "beauty", "icon": "beauty", "label": "Beauty", "count": 233 },
+    { "id": "lifestyle", "icon": "lifestyle", "label": "Lifestyle", "count": 29 },
+    { "id": "more", "icon": "more", "label": "More Categories", "count": 0 }
+  ],
+  "subCategories": [
+    { "id": "makeup-artists", "icon": "makeup", "label": "Makeup Artists", "count": 32 },
+    { "id": "hair-stylists", "icon": "hair", "label": "Hair Stylists", "count": 45 },
+    { "id": "nail-technicians", "icon": "nails", "label": "Nail Technicians", "count": 28 },
+    { "id": "lash-artists", "icon": "lash", "label": "Lash Artists", "count": 25 },
+    { "id": "brow-specialists", "icon": "brow", "label": "Brow Specialists", "count": 18 },
+    { "id": "facial-skin", "icon": "facial", "label": "Facial & Skin Experts", "count": 22 },
+    { "id": "barbers", "icon": "hair", "label": "Barbers", "count": 36 },
+    { "id": "massage-therapy", "icon": "spa", "label": "Massage Therapy", "count": 30 },
+    { "id": "waxing-specialists", "icon": "waxing", "label": "Waxing Specialists", "count": 15 },
+    { "id": "cosmetic-tattoo", "icon": "tattoo", "label": "Cosmetic Tattoo Artists", "count": 12 },
+    { "id": "bridal-beauty", "icon": "bridal", "label": "Bridal Beauty Experts", "count": 20 },
+    { "id": "spa-therapists", "icon": "spa", "label": "Spa Therapists", "count": 16 }
+  ],
+  "activeCategory": {
+    "id": "facial-skin",
+    "title": "Facial & Skin Experts",
+    "description": "Professional facials and skin treatments tailored to your skin type and goals.",
+    "pills": [
+      "Hydra Facial",
+      "Acne Treatment",
+      "Skin Consultation",
+      "Chemical Peel",
+      "LED Therapy",
+      "Dermaplaning"
+    ]
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "location": "Melbourne",
+  "filters": [
+    {
+      "id": "language",
+      "label": "Language",
+      "icon": "language",
+      "defaultValue": "all",
+      "searchable": true,
+      "options": [
+        { "id": "all", "label": "All Languages" },
+        { "id": "english", "label": "English" },
+        { "id": "mandarin", "label": "Mandarin" },
+        { "id": "cantonese", "label": "Cantonese" },
+        { "id": "vietnamese", "label": "Vietnamese" },
+        { "id": "thai", "label": "Thai" },
+        { "id": "filipino", "label": "Filipino (Tagalog)" },
+        { "id": "japanese", "label": "Japanese" },
+        { "id": "korean", "label": "Korean" },
+        { "id": "indonesian", "label": "Indonesian" },
+        { "id": "malay", "label": "Malay" },
+        { "id": "arabic", "label": "Arabic" },
+        { "id": "french", "label": "French" },
+        { "id": "german", "label": "German" },
+        { "id": "spanish", "label": "Spanish" },
+        { "id": "italian", "label": "Italian" },
+        { "id": "greek", "label": "Greek" },
+        { "id": "russian", "label": "Russian" },
+        { "id": "swahili", "label": "Swahili" },
+        { "id": "sinhala", "label": "Sinhala" },
+        { "id": "hindi", "label": "Hindi" },
+        { "id": "bengali", "label": "Bengali" },
+        { "id": "urdu", "label": "Urdu" },
+        { "id": "punjabi", "label": "Punjabi" },
+        { "id": "gujarati", "label": "Gujarati" },
+        { "id": "marathi", "label": "Marathi" },
+        { "id": "telugu", "label": "Telugu" },
+        { "id": "tamil", "label": "Tamil" },
+        { "id": "malayalam", "label": "Malayalam" },
+        { "id": "kannada", "label": "Kannada" },
+        { "id": "nepali", "label": "Nepali" }
+      ]
+    },
+    {
+      "id": "nationality",
+      "label": "Nationality",
+      "icon": "nationality",
+      "defaultValue": "all",
+      "searchable": true,
+      "options": [
+        { "id": "all", "label": "All Nationalities" },
+        { "id": "aussie", "label": "Aussie" },
+        { "id": "chinese", "label": "Chinese" },
+        { "id": "vietnamese", "label": "Vietnamese" },
+        { "id": "filipino", "label": "Filipino" },
+        { "id": "japanese", "label": "Japanese" },
+        { "id": "korean", "label": "Korean" },
+        { "id": "taiwanese", "label": "Taiwanese" },
+        { "id": "thai", "label": "Thai" },
+        { "id": "arab", "label": "Arab" },
+        { "id": "african", "label": "African" },
+        { "id": "european", "label": "European" },
+        { "id": "american", "label": "American" },
+        { "id": "indian", "label": "Indian" },
+        { "id": "pakistani", "label": "Pakistani" },
+        { "id": "bangladeshi", "label": "Bangladeshi" },
+        { "id": "sri-lankan", "label": "Sri Lankan" }
+      ]
+    },
+    {
+      "id": "gender",
+      "label": "Gender",
+      "icon": "gender",
+      "defaultValue": "all",
+      "options": [
+        { "id": "all", "label": "All Genders" },
+        { "id": "female", "label": "Female" },
+        { "id": "male", "label": "Male" },
+        { "id": "other", "label": "Other" }
+      ]
+    },
+    {
+      "id": "price",
+      "label": "Price",
+      "icon": "price",
+      "defaultValue": "any",
+      "options": [
+        { "id": "any", "label": "Any Price" },
+        { "id": "0-50", "label": "$0 - $50" },
+        { "id": "50-100", "label": "$50 - $100" },
+        { "id": "100-plus", "label": "$100 & above" }
+      ]
+    },
+    {
+      "id": "age",
+      "label": "Age",
+      "icon": "age",
+      "defaultValue": "all",
+      "options": [
+        { "id": "all", "label": "All Ages" },
+        { "id": "18-25", "label": "18 - 25" },
+        { "id": "26-35", "label": "26 - 35" },
+        { "id": "36-45", "label": "36 - 45" },
+        { "id": "46-plus", "label": "46+" }
+      ]
+    },
+    {
+      "id": "availability",
+      "label": "Online/Offline",
+      "icon": "online",
+      "defaultValue": "all",
+      "options": [
+        { "id": "all", "label": "Online/Offline" },
+        { "id": "online", "label": "Online" },
+        { "id": "offline", "label": "Offline" }
+      ]
+    }
+  ],
+  "sortOptions": [
+    { "id": "popular", "label": "Popular" },
+    { "id": "rating", "label": "Top Rated" },
+    { "id": "price-low", "label": "Price: Low to High" },
+    { "id": "price-high", "label": "Price: High to Low" },
+    { "id": "nearest", "label": "Nearest" }
+  ],
+  "genderOptions": [
+    { "id": "female", "label": "Female" },
+    { "id": "male", "label": "Male" },
+    { "id": "other", "label": "Other" }
+  ]
+}
