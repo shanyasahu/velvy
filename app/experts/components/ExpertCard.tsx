@@ -34,8 +34,8 @@ export function ExpertCard({ expert, compact = false }: ExpertCardProps) {
     : "flex items-center gap-2 text-[8px] text-(--text-muted) sm:text-[9px] lg:text-[10px]";
 
   const tagClass = compact
-    ? "rounded-md bg-(--bg-secondary) px-1 py-0.5 text-[7px] font-medium text-(--text-secondary)"
-    : "rounded-md bg-(--bg-secondary) px-1.5 py-0.5 text-[7px] font-medium text-(--text-secondary) sm:text-[8px] lg:text-[9px]";
+    ? "rounded-md border border-(--border) bg-(--bg-secondary) px-1 py-0.5 text-[7px] font-medium text-(--text-secondary)"
+    : "rounded-md border border-(--border) bg-(--bg-secondary) px-1.5 py-0.5 text-[7px] font-medium text-(--text-secondary) sm:text-[8px] lg:text-[9px]";
 
   const priceClass = compact
     ? "text-[9px] font-bold text-(--text-primary)"

@@ -13,7 +13,13 @@
         { "id": "couples-massage", "name": "Couples Massage", "price": 189, "duration": "90 min", "image": "https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=400&q=70" },
         { "id": "lymphatic-drainage", "name": "Lymphatic Drainage", "price": 99, "duration": "60 min", "image": "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&q=70" },
         { "id": "reflexology", "name": "Reflexology / Foot Massage", "price": 79, "duration": "45 min", "image": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=400&q=70" },
-        { "id": "indian-head", "name": "Indian Head Massage", "price": 69, "duration": "30 min", "image": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=70" }
+        { "id": "indian-head", "name": "Indian Head Massage", "price": 69, "duration": "30 min", "image": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=70" },
+        { "id": "sports-massage", "name": "Sports Massage", "price": 119, "duration": "60 min", "image": "https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=400&q=70" },
+        { "id": "thai-massage", "name": "Thai Massage", "price": 109, "duration": "75 min", "image": "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&q=70" },
+        { "id": "shiatsu-massage", "name": "Shiatsu Massage", "price": 99, "duration": "60 min", "image": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=70" },
+        { "id": "trigger-point", "name": "Trigger Point Therapy", "price": 105, "duration": "60 min", "image": "https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=400&q=70" },
+        { "id": "back-neck-massage", "name": "Back & Neck Massage", "price": 75, "duration": "45 min", "image": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=400&q=70" },
+        { "id": "swedish-deluxe", "name": "Swedish Deluxe Massage", "price": 139, "duration": "90 min", "image": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=70" }
       ]
     },
     {
@@ -113,6 +119,20 @@
         { "id": "hybrid-lashes", "name": "Hybrid Lashes", "price": 135, "duration": "105 min", "image": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=70" },
         { "id": "lash-removal", "name": "Lash Removal", "price": 30, "duration": "30 min", "image": "https://images.unsplash.com/photo-1503236823255-94609f598e71?auto=format&fit=crop&w=400&q=70" },
         { "id": "lash-refill", "name": "Lash Refill", "price": 70, "duration": "60 min", "image": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=400&q=70" }
+      ]
+    },
+    {
+      "id": "cosmetic-tattoo",
+      "label": "Cosmetic Tattoo",
+      "icon": "tattoo",
+      "services": [
+        { "id": "powder-brows", "name": "Powder Brows", "price": 350, "duration": "120 min", "image": "https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=400&q=70" },
+        { "id": "microblading", "name": "Microblading", "price": 380, "duration": "150 min", "image": "https://images.unsplash.com/photo-1620331317314-3b1de9f7e4b6?auto=format&fit=crop&w=400&q=70" },
+        { "id": "lip-blush", "name": "Lip Blush Tattoo", "price": 320, "duration": "120 min", "image": "https://images.unsplash.com/photo-1571875257727-256c39da42af?auto=format&fit=crop&w=400&q=70" },
+        { "id": "eyeliner-tattoo", "name": "Eyeliner Tattoo", "price": 250, "duration": "90 min", "image": "https://images.unsplash.com/photo-1503236823255-94609f598e71?auto=format&fit=crop&w=400&q=70" },
+        { "id": "beauty-spots", "name": "Beauty Spots", "price": 90, "duration": "45 min", "image": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=70" },
+        { "id": "scalp-micropigmentation", "name": "Scalp Micropigmentation", "price": 400, "duration": "180 min", "image": "https://images.unsplash.com/photo-1597225244660-1cd128c64284?auto=format&fit=crop&w=400&q=70" },
+        { "id": "brow-touchup", "name": "Brow Touch-Up", "price": 120, "duration": "60 min", "image": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=400&q=70" }
       ]
     },
     {

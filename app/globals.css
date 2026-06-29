@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
+/* Use the solid brand-gold (Message button) colour for all golden borders */
+.border-\(--border\) {
+  border-color: var(--brand-gold);
+}
 
+/* Consistent border width on full golden-bordered cards (not directional dividers) */
+.border.border-\(--border\),
+.border.border-\(--brand-gold\) {
+  border-width: 1.5px;
+}
 
 /* Firefox */
 html {
@@ -14,7 +23,8 @@ body {
 
 .search-glass {
   background: var(--search-bg);
-  border-color: var(--search-border);
+  border-color: var(--brand-gold);
+  border-width: 1.5px;
   box-shadow: var(--search-shadow);
 }
 

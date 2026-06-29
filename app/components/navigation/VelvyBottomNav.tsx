@@ -31,7 +31,7 @@ export function VelvyBottomNav() {
             <li key={label}>
               <Link
                 href={href}
-                className="group flex flex-col items-center gap-1 transition-transform duration-200 hover:-translate-y-0.5"
+                className="group flex flex-col items-center gap-1 outline-none transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none"
               >
                 <Icon
                   strokeWidth={1.6}

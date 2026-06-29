@@ -657,7 +657,7 @@ function ServicesPanel({
               className={`flex flex-col items-center gap-1 rounded-xl px-1 py-2.5 text-center transition-colors ${
                 active
                   ? "primary-button text-white"
-                  : "text-(--text-secondary) hover:bg-(--bg-card-hover)"
+                  : "border border-(--border) bg-(--bg-secondary) text-(--text-primary) hover:border-(--accent-primary)"
               }`}
             >
               <Icon size={18} strokeWidth={1.8} />
@@ -679,6 +679,7 @@ function ServicesPanel({
           onToggleService={onToggleService}
           gridClassName="grid grid-cols-3 gap-2.5"
           columns={3}
+          rowsPerPage={4}
         />
       </div>
 
@@ -724,6 +725,7 @@ function ServicesGrid({
   onToggleService,
   gridClassName,
   columns,
+  rowsPerPage,
 }: {
   title: string;
   services: ServiceItem[];
@@ -732,14 +734,23 @@ function ServicesGrid({
   onToggleService: (id: string) => void;
   gridClassName: string;
   columns: number;
+  /** Fixed number of rows per page. When omitted, rows are measured to fill. */
+  rowsPerPage?: number;
 }) {
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(columns * 3);
+  const [perPage, setPerPage] = useState(
+    rowsPerPage ? rowsPerPage * columns : columns * 3,
+  );
   const gridRef = useRef<HTMLDivElement>(null);
 
-  // Measure how many real card rows fit in the available height. Only the
-  // overflow gets paginated, so cards always fill the container first.
+  // Either use a fixed number of rows, or measure how many real card rows fit
+  // in the available height. Only the overflow gets paginated.
   useEffect(() => {
+    if (rowsPerPage) {
+      setPerPage(rowsPerPage * columns);
+      return;
+    }
+
     const el = gridRef.current;
     if (!el) return;
 
@@ -767,7 +778,7 @@ function ServicesGrid({
     const observer = new ResizeObserver(compute);
     observer.observe(el);
     return () => observer.disconnect();
-  }, [columns, services]);
+  }, [columns, rowsPerPage, services]);
 
   const totalPages = Math.max(1, Math.ceil(services.length / perPage));
 
@@ -1027,7 +1038,7 @@ function MobileLayout({
           services
         </h2>
 
-        <div className="mt-3 grid grid-cols-[96px_minmax(0,1fr)] gap-3">
+        <div className="mt-3 grid grid-cols-[72px_minmax(0,1fr)] gap-2">
           <nav className="flex flex-col gap-1.5">
             {expert.serviceCategories.map((category) => {
               const Icon = getIcon(category.icon);
@@ -1040,14 +1051,14 @@ function MobileLayout({
                   key={category.id}
                   type="button"
                   onClick={() => onCategorySelect(category.id)}
-                  className={`relative flex flex-col items-center gap-1 rounded-xl px-1 py-2.5 text-center transition-colors ${
+                  className={`relative flex flex-col items-center gap-0.5 rounded-xl px-0.5 py-1.5 text-center transition-colors ${
                     active
                       ? "primary-button text-white"
-                      : "border border-(--border) bg-(--bg-card) text-(--text-secondary)"
+                      : "border border-(--border) bg-(--bg-secondary) text-(--text-primary)"
                   }`}
                 >
-                  <Icon size={18} strokeWidth={1.8} />
-                  <span className="text-[9px] font-medium leading-tight">
+                  <Icon size={13} strokeWidth={1.8} />
+                  <span className="text-[8px] font-medium leading-tight">
                     {category.label}
                   </span>
                   {countInCat > 0 && (
@@ -1066,8 +1077,8 @@ function MobileLayout({
             currency={expert.currency}
             selectedIds={selectedIds}
             onToggleService={onToggleService}
-            gridClassName="grid grid-cols-2 gap-2"
-            columns={2}
+            gridClassName="grid grid-cols-3 gap-1.5"
+            columns={3}
           />
         </div>
 

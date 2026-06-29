@@ -7,6 +7,7 @@ import {
   CheckCheck,
   Image as ImageIcon,
   Mic,
+  Paperclip,
   RefreshCcw,
   Send,
 } from "lucide-react";
@@ -122,7 +123,7 @@ export function ChatPanel({ expert }: { expert: ExpertProfile }) {
       </div>
 
       {/* Composer */}
-      <div className="flex items-center gap-2 border-t border-(--border) px-3 py-3">
+      <div className="flex items-center gap-1.5 border-t border-(--border) px-2.5 py-3 sm:gap-2 sm:px-3">
         <input
           type="text"
           value={draft}
@@ -131,23 +132,30 @@ export function ChatPanel({ expert }: { expert: ExpertProfile }) {
             if (event.key === "Enter") sendMessage();
           }}
           placeholder="Type your message..."
-          className="h-10 flex-1 rounded-full border border-(--border) bg-(--bg-secondary) px-4 text-xs text-(--text-primary) placeholder:text-(--text-muted) focus:border-(--accent-primary) focus:outline-none"
+          className="h-9 min-w-0 flex-1 rounded-full border border-(--border) bg-(--bg-secondary) px-3.5 text-xs text-(--text-primary) placeholder:text-(--text-muted) focus:border-(--accent-primary) focus:outline-none sm:h-10 sm:px-4"
         />
         <button
           type="button"
           onClick={sendMessage}
-          className="primary-button flex h-10 items-center gap-1.5 rounded-full px-4 text-xs font-semibold text-white"
+          aria-label="Send message"
+          className="primary-button flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white sm:h-10 sm:w-auto sm:gap-1.5 sm:px-4"
         >
           <Send size={14} strokeWidth={1.8} />
-          Send
+          <span className="hidden sm:inline">Send</span>
         </button>
-        {[ImageIcon, Camera, Mic].map((Icon, index) => (
+        {[
+          { Icon: Paperclip, label: "Attach file" },
+          { Icon: ImageIcon, label: "Add image" },
+          { Icon: Camera, label: "Take photo" },
+          { Icon: Mic, label: "Record voice message" },
+        ].map(({ Icon, label }) => (
           <button
-            key={index}
+            key={label}
             type="button"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-(--border) text-(--text-secondary) transition-colors hover:border-(--accent-primary) hover:text-(--accent-primary)"
+            aria-label={label}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-(--border) text-(--text-secondary) transition-colors hover:border-(--accent-primary) hover:text-(--accent-primary) sm:h-10 sm:w-10"
           >
-            <Icon size={16} strokeWidth={1.8} />
+            <Icon size={15} strokeWidth={1.8} />
           </button>
         ))}
       </div>
