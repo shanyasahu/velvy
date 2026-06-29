@@ -17,6 +17,8 @@ import {
   Languages,
   MapPin,
   MessageSquare,
+  ChevronLeft,
+  ChevronRight,
   Plus,
   ShoppingCart,
   Sparkles,
@@ -669,30 +671,15 @@ function ServicesPanel({
 
       {/* Services grid */}
       <div className="rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-(--text-primary)">
-            Popular {activeCategory?.label} Services
-          </h2>
-          <Link
-            href="#"
-            className="flex items-center gap-1 text-[11px] font-medium text-(--accent-secondary) hover:text-(--accent-primary)"
-          >
-            View All
-            <ArrowRight size={12} strokeWidth={2} />
-          </Link>
-        </div>
-
-        <div className="mt-3 grid grid-cols-3 gap-2.5">
-          {activeCategory?.services.map((service) => (
-            <ServiceCard
-              key={service.id}
-              service={service}
-              currency={expert.currency}
-              selected={selectedIds.has(service.id)}
-              onToggle={() => onToggleService(service.id)}
-            />
-          ))}
-        </div>
+        <ServicesGrid
+          title={`Popular ${activeCategory?.label ?? ""} Services`}
+          services={activeCategory?.services ?? []}
+          currency={expert.currency}
+          selectedIds={selectedIds}
+          onToggleService={onToggleService}
+          gridClassName="grid grid-cols-3 gap-2.5"
+          columns={3}
+        />
       </div>
 
       {selectedIds.size > 0 && (
@@ -729,6 +716,133 @@ function SelectedServicesBar({ count }: { count: number }) {
   );
 }
 
+function ServicesGrid({
+  title,
+  services,
+  currency,
+  selectedIds,
+  onToggleService,
+  gridClassName,
+  columns,
+}: {
+  title: string;
+  services: ServiceItem[];
+  currency: string;
+  selectedIds: Set<string>;
+  onToggleService: (id: string) => void;
+  gridClassName: string;
+  columns: number;
+}) {
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(columns * 3);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  // Measure how many real card rows fit in the available height. Only the
+  // overflow gets paginated, so cards always fill the container first.
+  useEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+
+    const compute = () => {
+      const cards = el.querySelectorAll<HTMLElement>("[data-service-card]");
+      if (cards.length === 0) return;
+      let cardHeight = 0;
+      cards.forEach((card) => {
+        cardHeight = Math.max(cardHeight, card.offsetHeight);
+      });
+      if (cardHeight === 0) return;
+
+      const styles = window.getComputedStyle(el);
+      const rowGap = parseFloat(styles.rowGap) || 0;
+      const available = el.clientHeight;
+      if (!available) return;
+      const rows = Math.max(
+        1,
+        Math.floor((available + rowGap) / (cardHeight + rowGap)),
+      );
+      setPerPage(rows * columns);
+    };
+
+    compute();
+    const observer = new ResizeObserver(compute);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [columns, services]);
+
+  const totalPages = Math.max(1, Math.ceil(services.length / perPage));
+
+  useEffect(() => {
+    setPage(1);
+  }, [services]);
+
+  const currentPage = Math.min(page, totalPages);
+  const start = (currentPage - 1) * perPage;
+  const pageItems = services.slice(start, start + perPage);
+
+  return (
+    <div className="flex h-full flex-col">
+      <div className="flex items-center justify-between gap-2">
+        <h3 className="truncate text-sm font-semibold text-(--text-primary)">
+          {title}
+        </h3>
+      </div>
+
+      <div
+        ref={gridRef}
+        className={`mt-3 flex-1 auto-rows-min content-start ${gridClassName}`}
+      >
+        {pageItems.map((service) => (
+          <ServiceCard
+            key={service.id}
+            service={service}
+            currency={currency}
+            selected={selectedIds.has(service.id)}
+            onToggle={() => onToggleService(service.id)}
+          />
+        ))}
+      </div>
+
+      {totalPages > 1 && (
+        <div className="mt-3 flex items-center justify-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            aria-label="Previous page"
+            className="flex h-7 w-7 items-center justify-center rounded-lg border border-(--border) text-(--text-secondary) transition-colors hover:border-(--accent-primary) disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <ChevronLeft size={14} strokeWidth={2} />
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+            <button
+              key={num}
+              type="button"
+              onClick={() => setPage(num)}
+              aria-current={num === currentPage}
+              className={`flex h-7 min-w-7 items-center justify-center rounded-lg px-2 text-xs font-medium transition-colors ${
+                num === currentPage
+                  ? "primary-button text-white"
+                  : "border border-(--border) text-(--text-secondary) hover:border-(--accent-primary)"
+              }`}
+            >
+              {num}
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="flex h-7 items-center gap-1 rounded-lg border border-(--border) px-2.5 text-xs font-medium text-(--text-secondary) transition-colors hover:border-(--accent-primary) disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            Next
+            <ChevronRight size={14} strokeWidth={2} />
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ServiceCard({
   service,
   currency,
@@ -743,8 +857,9 @@ function ServiceCard({
   return (
     <button
       type="button"
+      data-service-card
       onClick={onToggle}
-      className={`group flex flex-col overflow-hidden rounded-xl border bg-(--bg-card) text-left transition-all ${
+      className={`group flex h-fit flex-col overflow-hidden rounded-xl border bg-(--bg-card) text-left transition-all ${
         selected
           ? "border-(--accent-primary) shadow-[var(--shadow-glow)]"
           : "border-(--border) hover:border-(--accent-primary)"
@@ -768,15 +883,15 @@ function ServiceCard({
           <Check size={12} strokeWidth={2.5} />
         </span>
       </div>
-      <div className="flex flex-1 flex-col gap-1 p-2">
-        <p className="line-clamp-2 text-[11px] font-semibold leading-tight text-(--text-primary)">
+      <div className="flex flex-1 flex-col gap-0.5 p-1.5">
+        <p className="truncate text-[11px] font-semibold leading-tight text-(--text-primary)">
           {service.name}
         </p>
-        <p className="text-xs font-bold text-(--brand-gold)">
+        <p className="text-[11px] font-bold text-(--brand-gold)">
           {currency}
           {service.price}
         </p>
-        <div className="mt-auto flex items-center justify-between pt-1">
+        <div className="mt-auto flex items-center justify-between pt-0.5">
           <span className="flex items-center gap-1 text-[9px] text-(--text-muted)">
             <Clock size={10} strokeWidth={1.8} />
             {service.duration}
@@ -828,7 +943,7 @@ function MobileLayout({
     <div className="space-y-5">
       {/* Hero */}
       <div className="overflow-hidden rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card)">
-        <div className="relative h-44 w-full">
+        <div className="relative h-28 w-full">
           <Image
             src={expert.coverImage}
             alt={expert.name}
@@ -838,35 +953,39 @@ function MobileLayout({
             priority
           />
           {expert.availableToday && (
-            <span className="absolute bottom-3 right-3 flex items-center gap-1 rounded-full bg-(--success) px-2.5 py-1 text-[10px] font-semibold text-white">
+            <span className="absolute bottom-2 right-2 flex items-center gap-1 rounded-full bg-(--success) px-2 py-0.5 text-[10px] font-semibold text-white">
               <span className="h-1.5 w-1.5 rounded-full bg-white" />
               Available Today
             </span>
           )}
         </div>
 
-        <div className="relative px-4 pb-4">
-          <span className="relative -mt-9 block h-20 w-20 overflow-hidden rounded-2xl border-4 border-(--bg-card) bg-(--bg-secondary)">
-            <Image
-              src={expert.image}
-              alt={expert.name}
-              fill
-              sizes="80px"
-              className="object-cover"
-            />
-          </span>
+        <div className="relative px-4 pb-3">
+          <div className="flex items-end gap-3">
+            <span className="relative -mt-7 block h-16 w-16 shrink-0 overflow-hidden rounded-2xl border-4 border-(--bg-card) bg-(--bg-secondary)">
+              <Image
+                src={expert.image}
+                alt={expert.name}
+                fill
+                sizes="64px"
+                className="object-cover"
+              />
+            </span>
 
-          <div className="mt-2 flex items-center gap-1.5">
-            <h1 className="text-xl font-bold text-(--text-primary)">
-              {expert.name}
-            </h1>
-            {expert.verified && (
-              <BadgeCheck size={18} strokeWidth={1.8} className="text-(--accent-primary)" />
-            )}
+            <div className="min-w-0 flex-1 pb-0.5">
+              <div className="flex items-center gap-1.5">
+                <h1 className="truncate text-lg font-bold text-(--text-primary)">
+                  {expert.name}
+                </h1>
+                {expert.verified && (
+                  <BadgeCheck size={16} strokeWidth={1.8} className="shrink-0 text-(--accent-primary)" />
+                )}
+              </div>
+              <p className="truncate text-xs font-medium text-(--accent-secondary)">
+                {expert.specialty}
+              </p>
+            </div>
           </div>
-          <p className="text-sm font-medium text-(--accent-secondary)">
-            {expert.specialty}
-          </p>
 
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-(--text-secondary)">
             <span className="flex items-center gap-1">
@@ -886,14 +1005,11 @@ function MobileLayout({
             </span>
           </div>
 
-          <h2 className="mt-4 text-sm font-semibold text-(--text-primary)">
-            About {expert.name.split(" ")[0]}
-          </h2>
-          <p className="mt-1 text-xs leading-relaxed text-(--text-secondary)">
+          <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-(--text-secondary)">
             {expert.about}
           </p>
 
-          <div className="mt-4">
+          <div className="mt-3">
             <ActionButtons activeTab={activeTab} onSelectTab={onSelectTab} />
           </div>
         </div>
@@ -944,31 +1060,15 @@ function MobileLayout({
             })}
           </nav>
 
-          <div>
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-(--text-primary)">
-                {activeCategory?.label}
-              </h3>
-              <Link
-                href="#"
-                className="flex items-center gap-1 text-[11px] font-medium text-(--accent-secondary)"
-              >
-                View All
-                <ArrowRight size={12} strokeWidth={2} />
-              </Link>
-            </div>
-            <div className="mt-2 grid grid-cols-2 gap-2.5">
-              {activeCategory?.services.map((service) => (
-                <ServiceCard
-                  key={service.id}
-                  service={service}
-                  currency={expert.currency}
-                  selected={selectedIds.has(service.id)}
-                  onToggle={() => onToggleService(service.id)}
-                />
-              ))}
-            </div>
-          </div>
+          <ServicesGrid
+            title={activeCategory?.label ?? ""}
+            services={activeCategory?.services ?? []}
+            currency={expert.currency}
+            selectedIds={selectedIds}
+            onToggleService={onToggleService}
+            gridClassName="grid grid-cols-2 gap-2"
+            columns={2}
+          />
         </div>
 
         {selectedCount > 0 && (

@@ -23,7 +23,11 @@
       "services": [
         { "id": "spa-pedicure", "name": "Spa Pedicure", "price": 69, "duration": "60 min", "image": "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=70" },
         { "id": "gel-manicure", "name": "Gel Manicure", "price": 49, "duration": "45 min", "image": "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=400&q=70" },
-        { "id": "acrylic-nails", "name": "Acrylic Nails", "price": 89, "duration": "75 min", "image": "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?auto=format&fit=crop&w=400&q=70" }
+        { "id": "acrylic-nails", "name": "Acrylic Nails", "price": 89, "duration": "75 min", "image": "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?auto=format&fit=crop&w=400&q=70" },
+        { "id": "classic-manicure", "name": "Classic Manicure", "price": 39, "duration": "30 min", "image": "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=400&q=70" },
+        { "id": "nail-art", "name": "Nail Art Design", "price": 59, "duration": "60 min", "image": "https://images.unsplash.com/photo-1610992015732-2449b76344bc?auto=format&fit=crop&w=400&q=70" },
+        { "id": "shellac-nails", "name": "Shellac Nails", "price": 55, "duration": "45 min", "image": "https://images.unsplash.com/photo-1636019411715-49b1c0e1e7c5?auto=format&fit=crop&w=400&q=70" },
+        { "id": "french-tips", "name": "French Tips", "price": 65, "duration": "60 min", "image": "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=70" }
       ]
     },
     {
@@ -34,7 +38,10 @@
         { "id": "hydra-facial", "name": "Hydra Facial", "price": 120, "duration": "60 min", "image": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=70" },
         { "id": "deep-cleansing-facial", "name": "Deep Cleansing Facial", "price": 90, "duration": "45 min", "image": "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=400&q=70" },
         { "id": "chemical-peel", "name": "Chemical Peel", "price": 140, "duration": "60 min", "image": "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=400&q=70" },
-        { "id": "microneedling", "name": "Microneedling", "price": 160, "duration": "75 min", "image": "https://images.unsplash.com/photo-1620331311520-246422fd82f9?auto=format&fit=crop&w=400&q=70" }
+        { "id": "microneedling", "name": "Microneedling", "price": 160, "duration": "75 min", "image": "https://images.unsplash.com/photo-1620331311520-246422fd82f9?auto=format&fit=crop&w=400&q=70" },
+        { "id": "led-therapy", "name": "LED Light Therapy", "price": 100, "duration": "45 min", "image": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=400&q=70" },
+        { "id": "dermaplaning", "name": "Dermaplaning", "price": 110, "duration": "45 min", "image": "https://images.unsplash.com/photo-1612908689788-71f5b2f8b7e3?auto=format&fit=crop&w=400&q=70" },
+        { "id": "anti-aging-facial", "name": "Anti-Aging Facial", "price": 150, "duration": "75 min", "image": "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=400&q=70" }
       ]
     },
     {
@@ -44,7 +51,12 @@
       "services": [
         { "id": "haircut-style", "name": "Haircut & Style", "price": 75, "duration": "60 min", "image": "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=70" },
         { "id": "hair-color", "name": "Hair Colour", "price": 150, "duration": "120 min", "image": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=400&q=70" },
-        { "id": "blow-dry", "name": "Blow Dry", "price": 45, "duration": "30 min", "image": "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=400&q=70" }
+        { "id": "blow-dry", "name": "Blow Dry", "price": 45, "duration": "30 min", "image": "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=400&q=70" },
+        { "id": "balayage", "name": "Balayage", "price": 180, "duration": "150 min", "image": "https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=400&q=70" },
+        { "id": "keratin-treatment", "name": "Keratin Treatment", "price": 200, "duration": "120 min", "image": "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=400&q=70" },
+        { "id": "hair-extensions", "name": "Hair Extensions", "price": 250, "duration": "180 min", "image": "https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?auto=format&fit=crop&w=400&q=70" },
+        { "id": "deep-conditioning", "name": "Deep Conditioning", "price": 60, "duration": "45 min", "image": "https://images.unsplash.com/photo-1559599101-f09722fb4948?auto=format&fit=crop&w=400&q=70" },
+        { "id": "updo-styling", "name": "Updo Styling", "price": 85, "duration": "60 min", "image": "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=400&q=70" }
       ]
     },
     {
@@ -54,7 +66,11 @@
       "services": [
         { "id": "event-makeup", "name": "Event Makeup", "price": 110, "duration": "60 min", "image": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=400&q=70" },
         { "id": "bridal-makeup", "name": "Bridal Makeup", "price": 200, "duration": "90 min", "image": "https://images.unsplash.com/photo-1457972729786-0411a3b2b626?auto=format&fit=crop&w=400&q=70" },
-        { "id": "brow-shaping", "name": "Brow Shaping", "price": 35, "duration": "30 min", "image": "https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=400&q=70" }
+        { "id": "brow-shaping", "name": "Brow Shaping", "price": 35, "duration": "30 min", "image": "https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=400&q=70" },
+        { "id": "natural-glam", "name": "Natural Glam Makeup", "price": 95, "duration": "60 min", "image": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=70" },
+        { "id": "brow-lamination", "name": "Brow Lamination", "price": 70, "duration": "45 min", "image": "https://images.unsplash.com/photo-1620331317314-3b1de9f7e4b6?auto=format&fit=crop&w=400&q=70" },
+        { "id": "brow-tint", "name": "Brow Tint", "price": 30, "duration": "30 min", "image": "https://images.unsplash.com/photo-1571875257727-256c39da42af?auto=format&fit=crop&w=400&q=70" },
+        { "id": "editorial-makeup", "name": "Editorial Makeup", "price": 160, "duration": "90 min", "image": "https://images.unsplash.com/photo-1503236823255-94609f598e71?auto=format&fit=crop&w=400&q=70" }
       ]
     },
     {
@@ -64,7 +80,11 @@
       "services": [
         { "id": "full-leg-wax", "name": "Full Leg Wax", "price": 65, "duration": "45 min", "image": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=70" },
         { "id": "brazilian-wax", "name": "Brazilian Wax", "price": 55, "duration": "30 min", "image": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=400&q=70" },
-        { "id": "body-scrub", "name": "Body Scrub", "price": 80, "duration": "60 min", "image": "https://images.unsplash.com/photo-1532926381893-7542290edf1d?auto=format&fit=crop&w=400&q=70" }
+        { "id": "body-scrub", "name": "Body Scrub", "price": 80, "duration": "60 min", "image": "https://images.unsplash.com/photo-1532926381893-7542290edf1d?auto=format&fit=crop&w=400&q=70" },
+        { "id": "underarm-wax", "name": "Underarm Wax", "price": 25, "duration": "20 min", "image": "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&q=70" },
+        { "id": "full-arm-wax", "name": "Full Arm Wax", "price": 45, "duration": "30 min", "image": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=70" },
+        { "id": "body-wrap", "name": "Detox Body Wrap", "price": 120, "duration": "75 min", "image": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=70" },
+        { "id": "back-wax", "name": "Back Wax", "price": 50, "duration": "30 min", "image": "https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=400&q=70" }
       ]
     },
     {
@@ -73,7 +93,26 @@
       "icon": "bridal",
       "services": [
         { "id": "spa-day-deluxe", "name": "Spa Day Deluxe", "price": 250, "duration": "180 min", "image": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=70" },
-        { "id": "relaxation-package", "name": "Relaxation Package", "price": 180, "duration": "120 min", "image": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=70" }
+        { "id": "relaxation-package", "name": "Relaxation Package", "price": 180, "duration": "120 min", "image": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=70" },
+        { "id": "bridal-package", "name": "Bridal Package", "price": 350, "duration": "240 min", "image": "https://images.unsplash.com/photo-1457972729786-0411a3b2b626?auto=format&fit=crop&w=400&q=70" },
+        { "id": "couples-retreat", "name": "Couples Retreat", "price": 320, "duration": "150 min", "image": "https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=400&q=70" },
+        { "id": "mum-to-be", "name": "Mum-to-Be Pamper", "price": 200, "duration": "120 min", "image": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=400&q=70" },
+        { "id": "glow-package", "name": "Glow Up Package", "price": 220, "duration": "150 min", "image": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=70" },
+        { "id": "weekend-escape", "name": "Weekend Escape", "price": 280, "duration": "180 min", "image": "https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=400&q=70" }
+      ]
+    },
+    {
+      "id": "lashes-tinting",
+      "label": "Lashes & Tinting",
+      "icon": "lash",
+      "services": [
+        { "id": "classic-lash-extensions", "name": "Classic Lash Extensions", "price": 120, "duration": "90 min", "image": "https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=400&q=70" },
+        { "id": "volume-lashes", "name": "Volume Lashes", "price": 150, "duration": "120 min", "image": "https://images.unsplash.com/photo-1597225244660-1cd128c64284?auto=format&fit=crop&w=400&q=70" },
+        { "id": "lash-lift", "name": "Lash Lift", "price": 80, "duration": "60 min", "image": "https://images.unsplash.com/photo-1571875257727-256c39da42af?auto=format&fit=crop&w=400&q=70" },
+        { "id": "lash-tint", "name": "Lash Tint", "price": 35, "duration": "30 min", "image": "https://images.unsplash.com/photo-1620331317314-3b1de9f7e4b6?auto=format&fit=crop&w=400&q=70" },
+        { "id": "hybrid-lashes", "name": "Hybrid Lashes", "price": 135, "duration": "105 min", "image": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=70" },
+        { "id": "lash-removal", "name": "Lash Removal", "price": 30, "duration": "30 min", "image": "https://images.unsplash.com/photo-1503236823255-94609f598e71?auto=format&fit=crop&w=400&q=70" },
+        { "id": "lash-refill", "name": "Lash Refill", "price": 70, "duration": "60 min", "image": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=400&q=70" }
       ]
     },
     {
@@ -82,7 +121,12 @@
       "icon": "wellness",
       "services": [
         { "id": "reiki-healing", "name": "Reiki Healing", "price": 90, "duration": "60 min", "image": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=400&q=70" },
-        { "id": "aromatherapy-session", "name": "Aromatherapy Session", "price": 85, "duration": "60 min", "image": "https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=400&q=70" }
+        { "id": "aromatherapy-session", "name": "Aromatherapy Session", "price": 85, "duration": "60 min", "image": "https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=400&q=70" },
+        { "id": "guided-meditation", "name": "Guided Meditation", "price": 60, "duration": "45 min", "image": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=400&q=70" },
+        { "id": "sound-healing", "name": "Sound Healing", "price": 95, "duration": "60 min", "image": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=70" },
+        { "id": "yoga-session", "name": "Private Yoga Session", "price": 80, "duration": "60 min", "image": "https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=400&q=70" },
+        { "id": "acupuncture", "name": "Acupuncture", "price": 110, "duration": "60 min", "image": "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=400&q=70" },
+        { "id": "breathwork", "name": "Breathwork Therapy", "price": 75, "duration": "45 min", "image": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=70" }
       ]
     }
   ],

@@ -35,7 +35,7 @@ export function FeaturedExpertCard({ expert }: FeaturedExpertCardProps) {
   };
 
   return (
-    <section className="feature-card overflow-hidden rounded-[var(--radius-md)] p-4">
+    <section className="overflow-hidden rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-4 shadow-[var(--shadow-card)]">
       <div className="flex items-stretch gap-3">
         <div className="flex min-w-0 flex-1 flex-col justify-center">
           <div className="flex items-center gap-1.5">

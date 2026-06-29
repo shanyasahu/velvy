@@ -6,6 +6,7 @@ import {
   Eye,
   MapPin,
   MessageSquare,
+  Play,
   Star,
 } from "lucide-react";
 
@@ -60,6 +61,14 @@ export function ExpertCard({ expert, compact = false }: ExpertCardProps) {
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </Link>
+
+        <button
+          type="button"
+          aria-label={`Play ${expert.name}'s intro video`}
+          className="absolute right-1.5 top-1.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-black/45 text-white backdrop-blur-sm transition-colors hover:bg-(--accent-primary) sm:h-6 sm:w-6 lg:right-2 lg:top-2 lg:h-8 lg:w-8"
+        >
+          <Play size={9} strokeWidth={2} className="ml-0.5 fill-white sm:size-2.5 lg:size-[13px]" />
+        </button>
       </div>
 
       <div
@@ -132,7 +141,7 @@ export function ExpertCard({ expert, compact = false }: ExpertCardProps) {
           <Link
             href={profileHref}
             aria-label={`View ${expert.name}'s profile`}
-            className="flex h-7 w-full items-center justify-center gap-1 rounded-lg border border-(--border) bg-(--bg-card) text-[10px] font-medium text-(--text-primary) transition-colors hover:border-(--accent-primary) sm:w-8 sm:text-[0px] lg:h-8 lg:w-9"
+            className="hidden h-7 w-full items-center justify-center gap-1 rounded-lg border border-(--border) bg-(--bg-card) text-[10px] font-medium text-(--text-primary) transition-colors hover:border-(--accent-primary) sm:flex sm:w-8 sm:text-[0px] lg:h-8 lg:w-9"
           >
             <Eye size={13} strokeWidth={1.8} />
             <span className="sm:hidden">View</span>
