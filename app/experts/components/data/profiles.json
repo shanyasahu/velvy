@@ -1,0 +1,124 @@
+{
+  "serviceCategories": [
+    {
+      "id": "massage-therapy",
+      "label": "Massage Therapy",
+      "icon": "spa",
+      "services": [
+        { "id": "swedish-massage", "name": "Swedish Massage", "price": 99, "duration": "60 min", "image": "https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=400&q=70" },
+        { "id": "deep-tissue", "name": "Deep Tissue Massage", "price": 119, "duration": "75 min", "image": "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&q=70" },
+        { "id": "hot-stone", "name": "Hot Stone Massage", "price": 129, "duration": "90 min", "image": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=70" },
+        { "id": "prenatal-massage", "name": "Prenatal Massage", "price": 109, "duration": "60 min", "image": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=400&q=70" },
+        { "id": "aromatherapy-massage", "name": "Aromatherapy Massage", "price": 99, "duration": "60 min", "image": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=70" },
+        { "id": "couples-massage", "name": "Couples Massage", "price": 189, "duration": "90 min", "image": "https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=400&q=70" },
+        { "id": "lymphatic-drainage", "name": "Lymphatic Drainage", "price": 99, "duration": "60 min", "image": "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?auto=format&fit=crop&w=400&q=70" },
+        { "id": "reflexology", "name": "Reflexology / Foot Massage", "price": 79, "duration": "45 min", "image": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=400&q=70" },
+        { "id": "indian-head", "name": "Indian Head Massage", "price": 69, "duration": "30 min", "image": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=70" }
+      ]
+    },
+    {
+      "id": "nail-care",
+      "label": "Nail Care",
+      "icon": "nails",
+      "services": [
+        { "id": "spa-pedicure", "name": "Spa Pedicure", "price": 69, "duration": "60 min", "image": "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=400&q=70" },
+        { "id": "gel-manicure", "name": "Gel Manicure", "price": 49, "duration": "45 min", "image": "https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=400&q=70" },
+        { "id": "acrylic-nails", "name": "Acrylic Nails", "price": 89, "duration": "75 min", "image": "https://images.unsplash.com/photo-1607779097040-26e80aa78e66?auto=format&fit=crop&w=400&q=70" }
+      ]
+    },
+    {
+      "id": "facials-skincare",
+      "label": "Facials & Skincare",
+      "icon": "facial",
+      "services": [
+        { "id": "hydra-facial", "name": "Hydra Facial", "price": 120, "duration": "60 min", "image": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=70" },
+        { "id": "deep-cleansing-facial", "name": "Deep Cleansing Facial", "price": 90, "duration": "45 min", "image": "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=400&q=70" },
+        { "id": "chemical-peel", "name": "Chemical Peel", "price": 140, "duration": "60 min", "image": "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=400&q=70" },
+        { "id": "microneedling", "name": "Microneedling", "price": 160, "duration": "75 min", "image": "https://images.unsplash.com/photo-1620331311520-246422fd82f9?auto=format&fit=crop&w=400&q=70" }
+      ]
+    },
+    {
+      "id": "hair-services",
+      "label": "Hair Services",
+      "icon": "hair",
+      "services": [
+        { "id": "haircut-style", "name": "Haircut & Style", "price": 75, "duration": "60 min", "image": "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=70" },
+        { "id": "hair-color", "name": "Hair Colour", "price": 150, "duration": "120 min", "image": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?auto=format&fit=crop&w=400&q=70" },
+        { "id": "blow-dry", "name": "Blow Dry", "price": 45, "duration": "30 min", "image": "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=400&q=70" }
+      ]
+    },
+    {
+      "id": "makeup-brows",
+      "label": "Makeup & Brows",
+      "icon": "makeup",
+      "services": [
+        { "id": "event-makeup", "name": "Event Makeup", "price": 110, "duration": "60 min", "image": "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?auto=format&fit=crop&w=400&q=70" },
+        { "id": "bridal-makeup", "name": "Bridal Makeup", "price": 200, "duration": "90 min", "image": "https://images.unsplash.com/photo-1457972729786-0411a3b2b626?auto=format&fit=crop&w=400&q=70" },
+        { "id": "brow-shaping", "name": "Brow Shaping", "price": 35, "duration": "30 min", "image": "https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=400&q=70" }
+      ]
+    },
+    {
+      "id": "waxing-body",
+      "label": "Waxing & Body Care",
+      "icon": "waxing",
+      "services": [
+        { "id": "full-leg-wax", "name": "Full Leg Wax", "price": 65, "duration": "45 min", "image": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=70" },
+        { "id": "brazilian-wax", "name": "Brazilian Wax", "price": 55, "duration": "30 min", "image": "https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=400&q=70" },
+        { "id": "body-scrub", "name": "Body Scrub", "price": 80, "duration": "60 min", "image": "https://images.unsplash.com/photo-1532926381893-7542290edf1d?auto=format&fit=crop&w=400&q=70" }
+      ]
+    },
+    {
+      "id": "pamper-packages",
+      "label": "Pamper Packages",
+      "icon": "bridal",
+      "services": [
+        { "id": "spa-day-deluxe", "name": "Spa Day Deluxe", "price": 250, "duration": "180 min", "image": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=70" },
+        { "id": "relaxation-package", "name": "Relaxation Package", "price": 180, "duration": "120 min", "image": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=70" }
+      ]
+    },
+    {
+      "id": "wellness",
+      "label": "Wellness",
+      "icon": "wellness",
+      "services": [
+        { "id": "reiki-healing", "name": "Reiki Healing", "price": 90, "duration": "60 min", "image": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=400&q=70" },
+        { "id": "aromatherapy-session", "name": "Aromatherapy Session", "price": 85, "duration": "60 min", "image": "https://images.unsplash.com/photo-1591343395082-e120087004b4?auto=format&fit=crop&w=400&q=70" }
+      ]
+    }
+  ],
+  "reviewPool": [
+    { "id": "r1", "author": "Emily Thompson", "avatar": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&q=70", "date": "2 days ago", "rating": 5, "comment": "Amazing experience! So gentle and professional. My skin feels so refreshed and glowing. Highly recommend!" },
+    { "id": "r2", "author": "Jessica Nguyen", "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&q=70", "date": "1 week ago", "rating": 5, "comment": "Best in the business. Booking was easy and the whole session felt completely tailored to me." },
+    { "id": "r3", "author": "Olivia Bennett", "avatar": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=120&q=70", "date": "2 weeks ago", "rating": 4, "comment": "Really lovely results and a calming space. Will definitely be coming back again soon." },
+    { "id": "r4", "author": "Sophie Walker", "avatar": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=120&q=70", "date": "3 weeks ago", "rating": 5, "comment": "Friendly, knowledgeable and genuinely cares about the outcome. Couldn't be happier." }
+  ],
+  "defaultSkills": [
+    "Personalised Care",
+    "Premium Products",
+    "Relaxing Environment",
+    "Flexible Scheduling"
+  ],
+  "overrides": {
+    "sophia-patel": {
+      "coverImage": "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=1200&q=70",
+      "availableToday": true,
+      "experienceBadge": "5+ Years Experience",
+      "about": "Certified skin specialist with 5+ years of experience in advanced skincare treatments. Passionate about helping you achieve healthy, glowing skin with personalised care.",
+      "nationality": "Australian",
+      "languages": ["English", "Hindi", "Gujarati"],
+      "experienceSummary": "5+ Years in Skincare",
+      "specialization": "Advanced Skincare Treatments",
+      "skills": [
+        "Deep Cleansing",
+        "Acne Treatment",
+        "Skin Rejuvenation",
+        "Hydra Facial",
+        "Chemical Peel",
+        "Microneedling",
+        "LED Therapy",
+        "Dermaplaning"
+      ],
+      "primaryServiceCategory": "facials-skincare"
+    }
+  }
+}

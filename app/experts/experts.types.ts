@@ -88,6 +88,59 @@ export interface MobileCategory {
   image: string;
 }
 
+export interface ServiceItem {
+  id: string;
+  name: string;
+  /** Numeric price, rendered with the expert's currency. */
+  price: number;
+  /** Human-readable duration, e.g. "60 min". */
+  duration: string;
+  image: string;
+}
+
+export interface ServiceCategory {
+  id: string;
+  label: string;
+  /** Icon key resolved by the icon map. */
+  icon: string;
+  services: ServiceItem[];
+}
+
+export interface ProfileReview {
+  id: string;
+  author: string;
+  avatar: string;
+  /** Relative date label, e.g. "2 days ago". */
+  date: string;
+  rating: number;
+  comment: string;
+}
+
+export interface RatingBucket {
+  /** Star tier, 5 → 1. */
+  stars: number;
+  count: number;
+}
+
+/** Full detail backing the individual expert profile page. */
+export interface ExpertProfile extends Expert {
+  /** Wide hero/cover image for the profile header. */
+  coverImage: string;
+  availableToday: boolean;
+  /** Badge text, e.g. "5+ Years Experience". */
+  experienceBadge: string;
+  about: string;
+  nationality: string;
+  languages: string[];
+  /** Short experience summary, e.g. "5+ Years in Skincare". */
+  experienceSummary: string;
+  specialization: string;
+  skills: string[];
+  ratingBreakdown: RatingBucket[];
+  reviewList: ProfileReview[];
+  serviceCategories: ServiceCategory[];
+}
+
 export interface ExpertsPageData {
   location: string;
   topCategories: TopCategory[];

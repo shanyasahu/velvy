@@ -18,7 +18,7 @@ interface ExpertCardProps {
 }
 
 export function ExpertCard({ expert, compact = false }: ExpertCardProps) {
-  const profileHref = `/specificexpert/${expert.id}`;
+  const profileHref = `/experts/${expert.id}`;
 
   const nameClass = compact
     ? "truncate text-[10px] font-semibold text-(--text-primary)"

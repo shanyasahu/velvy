@@ -12,7 +12,7 @@ interface FeaturedExpertCardProps {
 }
 
 export function FeaturedExpertCard({ expert }: FeaturedExpertCardProps) {
-  const profileHref = `/specificexpert/${expert.id}`;
+  const profileHref = `/experts/${expert.id}`;
 
   const handleShare = async () => {
     const shareData = {

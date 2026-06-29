@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDownWideNarrow, Search } from "lucide-react";
+import { ArrowDownWideNarrow, ChevronDown, Search } from "lucide-react";
 
 import type { FilterGroup, SortOption } from "../experts.types";
 import { FilterDropdown } from "./FilterDropdown";
@@ -33,7 +33,7 @@ export function ExpertsToolbar({
       className="rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-2 shadow-[var(--shadow-card)] lg:p-2.5"
     >
       <div className="flex items-center gap-3">
-        {/* Search bar — left */}
+        {/* Suburbs search — left */}
         <label className="flex h-10 w-[260px] shrink-0 items-center gap-2 rounded-full border border-(--border) bg-(--bg-secondary) px-4 transition-colors focus-within:border-(--accent-primary) xl:w-[300px]">
           <Search
             size={15}
@@ -44,8 +44,13 @@ export function ExpertsToolbar({
             type="text"
             value={searchQuery}
             onChange={(event) => onSearchChange(event.target.value)}
-            placeholder="Search services, salons, experts..."
+            placeholder="Suburbs search only"
             className="w-full bg-transparent text-xs text-(--text-primary) placeholder:text-(--text-muted) focus:outline-none"
+          />
+          <ChevronDown
+            size={15}
+            strokeWidth={1.8}
+            className="shrink-0 text-(--text-muted)"
           />
         </label>
 
