@@ -348,6 +348,8 @@ export default function ExpertsPageContent({ data }: ExpertsPageContentProps) {
             {/* Mobile */}
             <div className="lg:hidden">
               <MobileSuburbsBar
+                value={searchQuery}
+                onChange={setSearchQuery}
                 onFilterClick={() => setShowMobileCategories((prev) => !prev)}
               />
 
