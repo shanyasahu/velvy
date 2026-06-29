@@ -8,7 +8,7 @@
 /* Consistent border width on full golden-bordered cards (not directional dividers) */
 .border.border-\(--border\),
 .border.border-\(--brand-gold\) {
-  border-width: 1.5px;
+  border-width: 1.01px;
 }
 
 /* Firefox */
@@ -24,7 +24,7 @@ body {
 .search-glass {
   background: var(--search-bg);
   border-color: var(--brand-gold);
-  border-width: 1.5px;
+  border-width: 1.01px;
   box-shadow: var(--search-shadow);
 }
 
@@ -85,7 +85,7 @@ body {
 
 .feature-card {
   background: var(--gradient-card);
-  border: 1.5px solid var(--brand-gold);
+  border: 1.01px solid var(--brand-gold);
   box-shadow: var(--shadow-card);
 }
 

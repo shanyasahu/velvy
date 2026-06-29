@@ -903,7 +903,7 @@ function ServiceCard({
           {service.price}
         </p>
         <div className="mt-auto flex items-center justify-between pt-0.5">
-          <span className="flex items-center gap-1 text-[9px] text-(--text-muted)">
+          <span className="flex items-center gap-1 text-[9px] font-medium text-(--text-secondary)">
             <Clock size={10} strokeWidth={1.8} />
             {service.duration}
           </span>
