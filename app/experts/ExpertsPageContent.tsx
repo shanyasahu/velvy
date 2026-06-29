@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Map } from "lucide-react";
 
-import { SearchBar } from "@/components/header/SearchBar";
-
 import type { Expert, ExpertsPageData } from "./experts.types";
 import { CategoryCircles } from "./components/CategoryCircles";
 import { CategoryPills } from "./components/CategoryPills";
@@ -15,6 +13,7 @@ import { ExpertsHeader } from "./components/ExpertsHeader";
 import { ExpertsToolbar } from "./components/ExpertsToolbar";
 import { FeaturedExpertCard } from "./components/FeaturedExpertCard";
 import { MobileCategoriesPanel } from "./components/MobileCategoriesPanel";
+import { MobileSuburbsBar } from "./components/MobileSuburbsBar";
 import { SubCategoriesSidebar } from "./components/SubCategoriesSidebar";
 import { TopCategoriesSidebar } from "./components/TopCategoriesSidebar";
 
@@ -348,11 +347,7 @@ export default function ExpertsPageContent({ data }: ExpertsPageContentProps) {
           <div className="min-w-0 flex-1">
             {/* Mobile */}
             <div className="lg:hidden">
-              <SearchBar
-                className="mt-0"
-                placeholder="Search services, salons, spas, experts..."
-                value={searchQuery}
-                onChange={setSearchQuery}
+              <MobileSuburbsBar
                 onFilterClick={() => setShowMobileCategories((prev) => !prev)}
               />
 
