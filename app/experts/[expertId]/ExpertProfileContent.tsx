@@ -245,10 +245,12 @@ function ActionButtons({
   activeTab,
   onSelectTab,
   onGoToBooking,
+  onViewProfile,
 }: {
   activeTab: ProfileTab;
   onSelectTab: (tab: ProfileTab) => void;
   onGoToBooking: () => void;
+  onViewProfile?: () => void;
 }) {
   const tabClass = (active: boolean) =>
     `flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg border px-2 text-xs font-medium transition-colors ${
@@ -278,7 +280,7 @@ function ActionButtons({
       </button>
       <button
         type="button"
-        onClick={() => onSelectTab("profile")}
+        onClick={onViewProfile ?? (() => onSelectTab("profile"))}
         aria-pressed={activeTab === "profile"}
         className={tabClass(activeTab === "profile")}
       >
@@ -464,7 +466,13 @@ function ReviewsBlock({
 /* Desktop                                                             */
 /* ------------------------------------------------------------------ */
 
-function InfoGrid({ expert }: { expert: ExpertProfile }) {
+function InfoGrid({
+  expert,
+  scrollAnchorRef,
+}: {
+  expert: ExpertProfile;
+  scrollAnchorRef?: React.RefObject<HTMLDivElement | null>;
+}) {
   const infoItems = [
     { icon: Globe, label: "Nationality", value: expert.nationality },
     { icon: Languages, label: "Languages", value: expert.languages.join(", ") },
@@ -473,48 +481,13 @@ function InfoGrid({ expert }: { expert: ExpertProfile }) {
     { icon: MapPin, label: "Location", value: `${expert.distance} from you` },
   ];
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  // Seamless infinite auto-scroll: the items are rendered twice, and once the
-  // first copy has fully scrolled past, we jump back by exactly its width so
-  // the loop is invisible. Pauses while the user interacts.
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    let paused = false;
-    const onEnter = () => (paused = true);
-    const onLeave = () => (paused = false);
-    el.addEventListener("pointerdown", onEnter);
-    el.addEventListener("pointerup", onLeave);
-    el.addEventListener("pointercancel", onLeave);
-    el.addEventListener("mouseenter", onEnter);
-    el.addEventListener("mouseleave", onLeave);
-
-    const timer = setInterval(() => {
-      if (paused || el.scrollWidth <= el.clientWidth) return;
-      const half = el.scrollWidth / 2;
-      el.scrollLeft =
-        el.scrollLeft >= half ? el.scrollLeft - half + 1.2 : el.scrollLeft + 1.2;
-    }, 30);
-
-    return () => {
-      clearInterval(timer);
-      el.removeEventListener("pointerdown", onEnter);
-      el.removeEventListener("pointerup", onLeave);
-      el.removeEventListener("pointercancel", onLeave);
-      el.removeEventListener("mouseenter", onEnter);
-      el.removeEventListener("mouseleave", onLeave);
-    };
-  }, []);
-
   const renderItem = (
     { icon: Icon, label, value }: (typeof infoItems)[number],
     key: string,
   ) => (
     <div
       key={key}
-      className="flex w-[84px] shrink-0 flex-col items-center gap-1.5 text-center lg:w-auto"
+      className="flex flex-col items-center gap-1.5 text-center"
     >
       <span className="primary-button flex h-10 w-10 items-center justify-center rounded-full text-white">
         <Icon size={18} strokeWidth={1.8} />
@@ -529,14 +502,13 @@ function InfoGrid({ expert }: { expert: ExpertProfile }) {
   );
 
   return (
-    <div className="rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-4">
-      {/* Mobile: seamless auto-scrolling loop (items duplicated) */}
-      <div
-        ref={scrollRef}
-        className="flex gap-2 overflow-x-auto scrollbar-none lg:hidden"
-      >
+    <div
+      ref={scrollAnchorRef}
+      className="scroll-mt-24 rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-4"
+    >
+      {/* Mobile: 3-column grid so every highlight is fully visible */}
+      <div className="grid grid-cols-3 gap-x-2 gap-y-4 lg:hidden">
         {infoItems.map((item) => renderItem(item, item.label))}
-        {infoItems.map((item) => renderItem(item, `${item.label}-loop`))}
       </div>
 
       {/* Desktop: static 5-column grid */}
@@ -996,6 +968,19 @@ function MobileLayout({
     expert.serviceCategories.find((c) => c.id === activeCategoryId) ??
     expert.serviceCategories[0];
   const selectedCount = selectedIds.size;
+  const profileHighlightsRef = useRef<HTMLDivElement>(null);
+
+  const scrollToProfileDetails = () => {
+    onSelectTab("profile");
+    const scroll = () => {
+      profileHighlightsRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    };
+    // Wait for profile content to mount when coming from the message tab.
+    window.setTimeout(scroll, activeTab === "message" ? 100 : 0);
+  };
 
   return (
     <div className="space-y-5">
@@ -1072,6 +1057,7 @@ function MobileLayout({
               activeTab={activeTab}
               onSelectTab={onSelectTab}
               onGoToBooking={onGoToBooking}
+              onViewProfile={scrollToProfileDetails}
             />
           </div>
         </div>
@@ -1140,9 +1126,11 @@ function MobileLayout({
         )}
       </section>
 
-      <InfoGrid expert={expert} />
-      <SkillsSection expert={expert} />
-      <ReviewsBlock expert={expert} ratingMax={ratingMax} />
+      <div className="space-y-5">
+        <InfoGrid expert={expert} scrollAnchorRef={profileHighlightsRef} />
+        <SkillsSection expert={expert} />
+        <ReviewsBlock expert={expert} ratingMax={ratingMax} />
+      </div>
         </>
       )}
     </div>
