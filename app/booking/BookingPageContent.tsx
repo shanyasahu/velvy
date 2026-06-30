@@ -98,7 +98,6 @@ export function BookingPageContent({ data }: { data: BookingData }) {
         {/* ===== Mobile ===== */}
         <div className="space-y-4 lg:hidden">
           <MobileHero expert={expert} />
-          <LocationCard expert={expert} variant="mobile" />
           <SelectedServicesCard
             expertId={expert.id}
             services={services}
@@ -113,6 +112,7 @@ export function BookingPageContent({ data }: { data: BookingData }) {
             onSelectDay={setActiveDayId}
             onSelectTime={setActiveTime}
           />
+          <LocationCard expert={expert} variant="mobile" />
           <MobileSummary
             count={services.length}
             totalDuration={formatTotalDuration(totalMinutes)}
@@ -223,13 +223,17 @@ function LocationRow({
   label,
   value,
   action,
+  compact = false,
 }: {
   label: string;
   value: string;
   action: React.ReactNode;
+  compact?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-3 px-4 py-3.5">
+    <div
+      className={`flex items-center gap-3 px-4 ${compact ? "py-2" : "py-3.5"}`}
+    >
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-(--bg-secondary) text-(--accent-primary)">
         <MapPin size={16} strokeWidth={1.8} />
       </span>
@@ -263,13 +267,22 @@ function LocationCard({
 
   return (
     <section className="flex h-full flex-col rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) shadow-[var(--shadow-card)]">
-      <h2 className="px-4 pb-1 pt-4 font-[family-name:var(--font-heading)] text-lg font-bold text-(--text-primary) lg:text-xl">
+      <h2
+        className={`px-4 font-[family-name:var(--font-heading)] font-bold text-(--text-primary) ${
+          variant === "mobile"
+            ? "pb-0 pt-3 text-base"
+            : "pb-1 pt-4 text-lg lg:text-xl"
+        }`}
+      >
         Choose your location
       </h2>
-      <div className="flex flex-1 flex-col justify-center">
+      <div
+        className={`flex flex-col ${variant === "desktop" ? "flex-1 justify-center" : "pb-2"}`}
+      >
         <LocationRow
           label="Expert Location"
           value={expertLocation}
+          compact={variant === "mobile"}
           action={
             <button
               type="button"
@@ -289,6 +302,7 @@ function LocationCard({
           value={yourLocation}
           onChange={setYourLocation}
           onSwap={swapLocations}
+          compact={variant === "mobile"}
         />
       </div>
     </section>
@@ -376,25 +390,68 @@ function RoundChevron({
   dir,
   onClick,
   label,
+  disabled = false,
+  size = "md",
 }: {
   dir: "left" | "right";
   onClick: () => void;
   label: string;
+  disabled?: boolean;
+  size?: "sm" | "md";
 }) {
+  const dim =
+    size === "sm" ? "h-7 w-7" : "h-8 w-8 lg:h-9 lg:w-9";
+  const iconSize = size === "sm" ? 13 : 15;
+
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
       aria-label={label}
-      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-(--border) text-(--text-secondary) transition-colors hover:border-(--accent-primary) hover:text-(--accent-primary)"
+      className={`flex shrink-0 items-center justify-center rounded-full border border-(--border) text-(--text-secondary) transition-colors hover:border-(--accent-primary) hover:text-(--accent-primary) disabled:cursor-not-allowed disabled:opacity-40 ${dim}`}
     >
       {dir === "left" ? (
-        <ChevronLeft size={16} strokeWidth={2} />
+        <ChevronLeft size={iconSize} strokeWidth={2} />
       ) : (
-        <ChevronRight size={16} strokeWidth={2} />
+        <ChevronRight size={iconSize} strokeWidth={2} />
       )}
     </button>
   );
+}
+
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+    const onChange = () => setIsDesktop(media.matches);
+    onChange();
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
+
+  return isDesktop;
+}
+
+const MONTH_LABELS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+function parseDayMonth(iso: string) {
+  const [year, month] = iso.split("-").map(Number);
+  return { year, month: month - 1 };
 }
 
 function DateTimeCard({
@@ -415,55 +472,235 @@ function DateTimeCard({
   /** Hide the full-month calendar button (mobile layout). */
   showCalendarTrigger?: boolean;
 }) {
-  const daysRef = useRef<HTMLDivElement>(null);
+  const isDesktop = useIsDesktop();
   const timesRef = useRef<HTMLDivElement>(null);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [dayOffset, setDayOffset] = useState(0);
+  const [timeOffset, setTimeOffset] = useState(0);
 
-  const scrollDays = (dir: 1 | -1) =>
-    daysRef.current?.scrollBy({ left: dir * 200, behavior: "smooth" });
+  const visibleDayCount = isDesktop ? 7 : 4;
+  const visibleTimeCount = 4;
+
+  const activeDay = days.find((d) => d.id === activeDayId) ?? days[0];
+  const activeMonth = activeDay
+    ? parseDayMonth(activeDay.iso)
+    : { year: new Date().getFullYear(), month: new Date().getMonth() };
+
+  useEffect(() => {
+    const idx = days.findIndex((d) => d.id === activeDayId);
+    if (idx < 0) return;
+    setDayOffset((prev) => {
+      if (idx < prev) return idx;
+      if (idx >= prev + visibleDayCount) {
+        return Math.max(0, idx - visibleDayCount + 1);
+      }
+      return prev;
+    });
+  }, [activeDayId, days, visibleDayCount]);
+
+  useEffect(() => {
+    if (isDesktop) return;
+    const idx = times.findIndex((t) => t === activeTime);
+    if (idx < 0) return;
+    setTimeOffset((prev) => {
+      if (idx < prev) return idx;
+      if (idx >= prev + visibleTimeCount) {
+        return Math.max(0, idx - visibleTimeCount + 1);
+      }
+      return prev;
+    });
+  }, [activeTime, times, isDesktop, visibleTimeCount]);
+
+  const visibleDays = days.slice(dayOffset, dayOffset + visibleDayCount);
+  const visibleTimes = isDesktop
+    ? times
+    : times.slice(timeOffset, timeOffset + visibleTimeCount);
+
+  const canScrollDaysLeft = dayOffset > 0;
+  const canScrollDaysRight = dayOffset + visibleDayCount < days.length;
+  const canScrollTimesLeft = timeOffset > 0;
+  const canScrollTimesRight = timeOffset + visibleTimeCount < times.length;
+
+  const scrollDaysWindow = (dir: 1 | -1) => {
+    setDayOffset((prev) =>
+      Math.max(
+        0,
+        Math.min(days.length - visibleDayCount, prev + dir),
+      ),
+    );
+  };
+
+  const scrollTimesWindow = (dir: 1 | -1) => {
+    setTimeOffset((prev) =>
+      Math.max(
+        0,
+        Math.min(times.length - visibleTimeCount, prev + dir),
+      ),
+    );
+  };
 
   const scrollTimes = (dir: 1 | -1) =>
     timesRef.current?.scrollBy({ left: dir * 200, behavior: "smooth" });
 
+  const monthIndex = (year: number, month: number) => year * 12 + month;
+
+  const bookingStartMonth = days[0]
+    ? parseDayMonth(days[0].iso)
+    : activeMonth;
+  const bookingEndMonth = days[days.length - 1]
+    ? parseDayMonth(days[days.length - 1].iso)
+    : activeMonth;
+
+  const shiftMonth = (dir: -1 | 1) => {
+    let { year, month } = activeMonth;
+    month += dir;
+    if (month < 0) {
+      month = 11;
+      year -= 1;
+    } else if (month > 11) {
+      month = 0;
+      year += 1;
+    }
+
+    if (
+      monthIndex(year, month) < monthIndex(bookingStartMonth.year, bookingStartMonth.month) ||
+      monthIndex(year, month) > monthIndex(bookingEndMonth.year, bookingEndMonth.month)
+    ) {
+      return;
+    }
+
+    const firstInMonth = days.find((d) => {
+      const parsed = parseDayMonth(d.iso);
+      return parsed.year === year && parsed.month === month;
+    });
+    if (firstInMonth) {
+      onSelectDay(firstInMonth.id);
+      const idx = days.findIndex((d) => d.id === firstInMonth.id);
+      if (idx >= 0) setDayOffset(idx);
+    }
+  };
+
+  const canPrevMonth =
+    monthIndex(activeMonth.year, activeMonth.month) >
+    monthIndex(bookingStartMonth.year, bookingStartMonth.month);
+  const canNextMonth =
+    monthIndex(activeMonth.year, activeMonth.month) <
+    monthIndex(bookingEndMonth.year, bookingEndMonth.month);
+
   const dayPill = (active: boolean) =>
-    `flex h-10 shrink-0 items-center justify-center gap-1 rounded-xl border px-4 text-xs font-medium transition-colors ${
+    `flex h-9 min-w-0 items-center justify-center rounded-xl border px-1.5 text-[11px] font-medium transition-colors lg:h-10 lg:gap-1 lg:px-3 lg:text-xs ${
+      active
+        ? "primary-button border-transparent text-white"
+        : "border-(--border) bg-(--bg-card) text-(--text-primary) hover:border-(--accent-primary)"
+    }`;
+
+  const mobileDayPill = (active: boolean) =>
+    `flex h-8 w-full items-center justify-center rounded-lg border px-1 text-[10px] font-medium leading-tight whitespace-nowrap transition-colors ${
       active
         ? "primary-button border-transparent text-white"
         : "border-(--border) bg-(--bg-card) text-(--text-primary) hover:border-(--accent-primary)"
     }`;
 
   const timePill = (active: boolean) =>
-    `flex h-10 shrink-0 items-center justify-center rounded-xl border px-4 text-xs font-medium transition-colors ${
+    `flex h-9 shrink-0 items-center justify-center rounded-xl border px-4 text-xs font-medium transition-colors lg:h-10 ${
+      active
+        ? "primary-button border-transparent text-white"
+        : "border-(--border) bg-(--bg-card) text-(--text-primary) hover:border-(--accent-primary)"
+    }`;
+
+  const mobileTimePill = (active: boolean) =>
+    `flex h-8 w-full items-center justify-center rounded-lg border px-0.5 text-[9px] font-medium leading-none whitespace-nowrap tabular-nums transition-colors ${
       active
         ? "primary-button border-transparent text-white"
         : "border-(--border) bg-(--bg-card) text-(--text-primary) hover:border-(--accent-primary)"
     }`;
 
   return (
-    <section className="flex h-full flex-col rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-4 shadow-[var(--shadow-card)] lg:p-5">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="flex items-center gap-2 font-[family-name:var(--font-heading)] text-lg font-bold text-(--text-primary) lg:text-xl">
-          <Calendar size={18} strokeWidth={1.8} className="text-(--accent-primary)" />
+    <section className="flex h-full flex-col rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-3 shadow-[var(--shadow-card)] lg:p-5">
+      <div className="flex items-start justify-between gap-2 overflow-visible">
+        <h2 className="flex items-center gap-2 font-[family-name:var(--font-heading)] text-base font-bold text-(--text-primary) lg:text-xl">
+          <Calendar
+            size={16}
+            strokeWidth={1.8}
+            className="shrink-0 text-(--accent-primary) lg:h-[18px] lg:w-[18px]"
+          />
           Choose Date &amp; Time
         </h2>
+
+        {showCalendarTrigger && (
+          <div className="relative shrink-0 overflow-visible">
+            <button
+              type="button"
+              onClick={() => setShowCalendar((open) => !open)}
+              aria-label="Open date picker"
+              aria-expanded={showCalendar}
+              className="flex h-8 shrink-0 items-center gap-1 rounded-xl border border-(--border) px-2 text-[11px] font-medium text-(--text-primary) transition-colors hover:border-(--accent-primary) lg:h-9 lg:gap-1.5 lg:px-3 lg:text-xs"
+            >
+              <Calendar
+                size={13}
+                strokeWidth={1.8}
+                className="text-(--accent-primary) lg:h-[15px] lg:w-[15px]"
+              />
+              <span>Select date</span>
+              <ChevronDown
+                size={12}
+                strokeWidth={1.8}
+                className={`text-(--text-secondary) transition-transform lg:h-3.5 lg:w-3.5 ${showCalendar ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            {showCalendar && (
+              <DatePickerPopover
+                days={days}
+                activeDayId={activeDayId}
+                onSelect={onSelectDay}
+                onClose={() => setShowCalendar(false)}
+              />
+            )}
+          </div>
+        )}
       </div>
 
       {/* ----- Date ----- */}
-      <div className="mt-4 overflow-visible">
-        <p className="mb-2 text-xs font-semibold text-(--text-secondary)">
-          Select Date
-        </p>
-        <div className="relative flex items-center gap-2 overflow-visible">
+      <div className="mt-3 overflow-visible lg:mt-4">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-[11px] font-semibold text-(--text-secondary) lg:text-xs">
+            Select Date
+          </p>
+          <div className="flex items-center gap-1">
+            <RoundChevron
+              dir="left"
+              size="sm"
+              label="Previous month"
+              onClick={() => shiftMonth(-1)}
+              disabled={!canPrevMonth}
+            />
+            <span className="min-w-[3.75rem] text-center text-[10px] font-medium text-(--text-secondary) lg:text-[11px]">
+              {MONTH_LABELS[activeMonth.month]} {activeMonth.year}
+            </span>
+            <RoundChevron
+              dir="right"
+              size="sm"
+              label="Next month"
+              onClick={() => shiftMonth(1)}
+              disabled={!canNextMonth}
+            />
+          </div>
+        </div>
+        <div className="flex items-center gap-1 lg:gap-2">
           <RoundChevron
             dir="left"
+            size={isDesktop ? "md" : "sm"}
             label="Previous dates"
-            onClick={() => scrollDays(-1)}
+            onClick={() => scrollDaysWindow(-1)}
+            disabled={!canScrollDaysLeft}
           />
           <div
-            ref={daysRef}
-            className="flex flex-1 gap-2 overflow-x-auto scrollbar-none"
+            className={`grid min-w-0 flex-1 gap-1 lg:gap-2 ${
+              isDesktop ? "grid-cols-7" : "grid-cols-4"
+            }`}
           >
-            {days.map((day) => {
+            {visibleDays.map((day) => {
               const active = day.id === activeDayId;
               return (
                 <button
@@ -471,59 +708,70 @@ function DateTimeCard({
                   type="button"
                   data-day-id={day.id}
                   onClick={() => onSelectDay(day.id)}
-                  className={dayPill(active)}
+                  className={isDesktop ? dayPill(active) : mobileDayPill(active)}
                 >
-                  <span className="font-semibold">{day.weekday}</span>
-                  <span>{day.date}</span>
+                  {isDesktop ? (
+                    <>
+                      <span className="truncate font-semibold">{day.weekday}</span>
+                      <span className="truncate">{day.date}</span>
+                    </>
+                  ) : (
+                    <span>{day.date}</span>
+                  )}
                 </button>
               );
             })}
           </div>
           <RoundChevron
             dir="right"
+            size={isDesktop ? "md" : "sm"}
             label="Next dates"
-            onClick={() => scrollDays(1)}
+            onClick={() => scrollDaysWindow(1)}
+            disabled={!canScrollDaysRight}
           />
-
-          {showCalendarTrigger && (
-            <>
-              <button
-                type="button"
-                onClick={() => setShowCalendar((open) => !open)}
-                aria-label="Open date picker"
-                aria-expanded={showCalendar}
-                className="flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-(--border) px-3 text-xs font-medium text-(--text-primary) transition-colors hover:border-(--accent-primary)"
-              >
-                <Calendar size={15} strokeWidth={1.8} className="text-(--accent-primary)" />
-                <span className="hidden sm:inline">Select date</span>
-                <ChevronDown
-                  size={14}
-                  strokeWidth={1.8}
-                  className={`text-(--text-secondary) transition-transform ${showCalendar ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {showCalendar && (
-                <DatePickerPopover
-                  days={days}
-                  activeDayId={activeDayId}
-                  onSelect={onSelectDay}
-                  onClose={() => setShowCalendar(false)}
-                />
-              )}
-            </>
-          )}
         </div>
       </div>
 
-      <div className="my-4 h-px w-full bg-(--border)" />
+      <div className="my-3 h-px w-full bg-(--border) lg:my-4" />
 
       {/* ----- Time ----- */}
       <div>
-        <p className="mb-2 text-xs font-semibold text-(--text-secondary)">
+        <p className="mb-2 text-[11px] font-semibold text-(--text-secondary) lg:text-xs">
           Select Time
         </p>
-        <div className="flex items-center gap-2">
+
+        {/* Mobile — 4 visible slots */}
+        <div className="flex items-center gap-1 lg:hidden">
+          <RoundChevron
+            dir="left"
+            size="sm"
+            label="Earlier times"
+            onClick={() => scrollTimesWindow(-1)}
+            disabled={!canScrollTimesLeft}
+          />
+          <div className="grid min-w-0 flex-1 grid-cols-4 gap-1">
+            {visibleTimes.map((time) => (
+              <button
+                key={time}
+                type="button"
+                onClick={() => onSelectTime(time)}
+                className={mobileTimePill(time === activeTime)}
+              >
+                {time}
+              </button>
+            ))}
+          </div>
+          <RoundChevron
+            dir="right"
+            size="sm"
+            label="More times"
+            onClick={() => scrollTimesWindow(1)}
+            disabled={!canScrollTimesRight}
+          />
+        </div>
+
+        {/* Desktop — scrollable row */}
+        <div className="hidden items-center gap-2 lg:flex">
           <RoundChevron
             dir="left"
             label="Earlier times"
@@ -538,7 +786,7 @@ function DateTimeCard({
                 key={time}
                 type="button"
                 onClick={() => onSelectTime(time)}
-                className={timePill(time === activeTime)}
+                className={`${timePill(time === activeTime)} shrink-0`}
               >
                 {time}
               </button>

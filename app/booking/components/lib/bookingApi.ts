@@ -18,11 +18,12 @@ const MONTHS = [
   "Dec",
 ];
 
+/** Number of calendar months users can book ahead (current month + this many more). */
+export const BOOKING_MONTHS_AHEAD = 6;
+
 /**
- * Builds every selectable day from today through the end of NEXT month, so the
- * picker always rolls into the following month (useful when today is near a
- * month boundary, e.g. Jun 30 → shows the rest of June plus all of July).
- * The first day is labelled "Today"; the rest show their weekday abbreviation.
+ * Builds every selectable day from today through 6 months ahead.
+ * Past dates are excluded; the first day is labelled "Today".
  */
 function buildScheduleDays(from = new Date()): BookingDay[] {
   const startOfToday = new Date(
@@ -30,8 +31,8 @@ function buildScheduleDays(from = new Date()): BookingDay[] {
     from.getMonth(),
     from.getDate(),
   );
-  // Last day of next month: day 0 of the month after next.
-  const end = new Date(from.getFullYear(), from.getMonth() + 2, 0);
+  // Last day of the 6th month from today (inclusive of the current month).
+  const end = new Date(from.getFullYear(), from.getMonth() + BOOKING_MONTHS_AHEAD, 0);
 
   const days: BookingDay[] = [];
   for (

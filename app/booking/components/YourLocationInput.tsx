@@ -11,12 +11,14 @@ interface YourLocationInputProps {
   value: string;
   onChange: (value: string) => void;
   onSwap: () => void;
+  compact?: boolean;
 }
 
 export function YourLocationInput({
   value,
   onChange,
   onSwap,
+  compact = false,
 }: YourLocationInputProps) {
   const listboxId = useId();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -85,7 +87,10 @@ export function YourLocationInput({
   };
 
   return (
-    <div ref={containerRef} className="relative flex items-center gap-3 px-4 py-3.5">
+    <div
+      ref={containerRef}
+      className={`relative flex items-center gap-3 px-4 ${compact ? "py-2" : "py-3.5"}`}
+    >
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-(--bg-secondary) text-(--accent-primary)">
         <MapPin size={16} strokeWidth={1.8} />
       </span>
