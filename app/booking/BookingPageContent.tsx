@@ -454,6 +454,20 @@ function parseDayMonth(iso: string) {
   return { year, month: month - 1 };
 }
 
+type TimePeriod = "AM" | "PM";
+
+function getTimePeriod(time: string): TimePeriod {
+  return time.endsWith("PM") ? "PM" : "AM";
+}
+
+function formatTimeParts(time: string) {
+  const match = time.match(/^(.+?) (AM|PM)$/);
+  return {
+    clock: match?.[1] ?? time,
+    period: (match?.[2] ?? getTimePeriod(time)) as TimePeriod,
+  };
+}
+
 function DateTimeCard({
   days,
   times,
@@ -477,9 +491,27 @@ function DateTimeCard({
   const [showCalendar, setShowCalendar] = useState(false);
   const [dayOffset, setDayOffset] = useState(0);
   const [timeOffset, setTimeOffset] = useState(0);
+  const [timePeriod, setTimePeriod] = useState<TimePeriod>(() =>
+    getTimePeriod(activeTime),
+  );
 
   const visibleDayCount = isDesktop ? 7 : 4;
   const visibleTimeCount = 4;
+
+  const filteredTimes = useMemo(
+    () => times.filter((time) => getTimePeriod(time) === timePeriod),
+    [times, timePeriod],
+  );
+
+  const switchTimePeriod = (period: TimePeriod) => {
+    if (period === timePeriod) return;
+    setTimePeriod(period);
+    setTimeOffset(0);
+    const inPeriod = times.filter((time) => getTimePeriod(time) === period);
+    if (!inPeriod.includes(activeTime) && inPeriod[0]) {
+      onSelectTime(inPeriod[0]);
+    }
+  };
 
   const activeDay = days.find((d) => d.id === activeDayId) ?? days[0];
   const activeMonth = activeDay
@@ -500,7 +532,7 @@ function DateTimeCard({
 
   useEffect(() => {
     if (isDesktop) return;
-    const idx = times.findIndex((t) => t === activeTime);
+    const idx = filteredTimes.findIndex((t) => t === activeTime);
     if (idx < 0) return;
     setTimeOffset((prev) => {
       if (idx < prev) return idx;
@@ -509,17 +541,22 @@ function DateTimeCard({
       }
       return prev;
     });
-  }, [activeTime, times, isDesktop, visibleTimeCount]);
+  }, [activeTime, filteredTimes, isDesktop, visibleTimeCount]);
+
+  useEffect(() => {
+    setTimePeriod(getTimePeriod(activeTime));
+  }, [activeTime]);
 
   const visibleDays = days.slice(dayOffset, dayOffset + visibleDayCount);
   const visibleTimes = isDesktop
-    ? times
-    : times.slice(timeOffset, timeOffset + visibleTimeCount);
+    ? filteredTimes
+    : filteredTimes.slice(timeOffset, timeOffset + visibleTimeCount);
 
   const canScrollDaysLeft = dayOffset > 0;
   const canScrollDaysRight = dayOffset + visibleDayCount < days.length;
   const canScrollTimesLeft = timeOffset > 0;
-  const canScrollTimesRight = timeOffset + visibleTimeCount < times.length;
+  const canScrollTimesRight =
+    timeOffset + visibleTimeCount < filteredTimes.length;
 
   const scrollDaysWindow = (dir: 1 | -1) => {
     setDayOffset((prev) =>
@@ -534,7 +571,7 @@ function DateTimeCard({
     setTimeOffset((prev) =>
       Math.max(
         0,
-        Math.min(times.length - visibleTimeCount, prev + dir),
+        Math.min(filteredTimes.length - visibleTimeCount, prev + dir),
       ),
     );
   };
@@ -587,8 +624,11 @@ function DateTimeCard({
     monthIndex(activeMonth.year, activeMonth.month) <
     monthIndex(bookingEndMonth.year, bookingEndMonth.month);
 
+  const desktopPillSize =
+    "lg:h-10 lg:w-full lg:min-w-0 lg:px-1.5 lg:text-xs";
+
   const dayPill = (active: boolean) =>
-    `flex h-9 min-w-0 items-center justify-center rounded-xl border px-1.5 text-[11px] font-medium transition-colors lg:h-10 lg:gap-1 lg:px-3 lg:text-xs ${
+    `flex h-9 min-w-0 items-center justify-center gap-0.5 rounded-xl border text-[11px] font-medium transition-colors ${desktopPillSize} ${
       active
         ? "primary-button border-transparent text-white"
         : "border-(--border) bg-(--bg-card) text-(--text-primary) hover:border-(--accent-primary)"
@@ -602,21 +642,28 @@ function DateTimeCard({
     }`;
 
   const timePill = (active: boolean) =>
-    `flex h-9 shrink-0 items-center justify-center rounded-xl border px-4 text-xs font-medium transition-colors lg:h-10 ${
+    `flex h-9 min-w-0 items-center justify-center rounded-xl border text-[11px] font-medium transition-colors ${desktopPillSize} ${
       active
         ? "primary-button border-transparent text-white"
         : "border-(--border) bg-(--bg-card) text-(--text-primary) hover:border-(--accent-primary)"
     }`;
 
   const mobileTimePill = (active: boolean) =>
-    `flex h-8 w-full items-center justify-center rounded-lg border px-0.5 text-[9px] font-medium leading-none whitespace-nowrap tabular-nums transition-colors ${
+    `flex h-9 w-full flex-col items-center justify-center gap-0 rounded-lg border px-0.5 py-1 text-center font-medium leading-none whitespace-nowrap tabular-nums transition-colors ${
       active
         ? "primary-button border-transparent text-white"
         : "border-(--border) bg-(--bg-card) text-(--text-primary) hover:border-(--accent-primary)"
     }`;
 
+  const periodToggle = (active: boolean) =>
+    `rounded-md px-2 py-1 text-[10px] font-semibold transition-colors lg:px-2.5 lg:text-[11px] ${
+      active
+        ? "primary-button text-white"
+        : "text-(--text-secondary) hover:text-(--accent-primary)"
+    }`;
+
   return (
-    <section className="flex h-full flex-col rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-3 shadow-[var(--shadow-card)] lg:p-5">
+    <section className="flex h-full min-w-0 flex-col overflow-hidden rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-3 shadow-[var(--shadow-card)] lg:p-5">
       <div className="flex items-start justify-between gap-2 overflow-visible">
         <h2 className="flex items-center gap-2 font-[family-name:var(--font-heading)] text-base font-bold text-(--text-primary) lg:text-xl">
           <Calendar
@@ -687,7 +734,7 @@ function DateTimeCard({
             />
           </div>
         </div>
-        <div className="flex items-center gap-1 lg:gap-2">
+        <div className="flex min-w-0 items-center gap-1 lg:gap-2">
           <RoundChevron
             dir="left"
             size={isDesktop ? "md" : "sm"}
@@ -695,11 +742,7 @@ function DateTimeCard({
             onClick={() => scrollDaysWindow(-1)}
             disabled={!canScrollDaysLeft}
           />
-          <div
-            className={`grid min-w-0 flex-1 gap-1 lg:gap-2 ${
-              isDesktop ? "grid-cols-7" : "grid-cols-4"
-            }`}
-          >
+          <div className="grid min-w-0 flex-1 grid-cols-4 gap-1 lg:grid-cols-7 lg:gap-2">
             {visibleDays.map((day) => {
               const active = day.id === activeDayId;
               return (
@@ -736,9 +779,34 @@ function DateTimeCard({
 
       {/* ----- Time ----- */}
       <div>
-        <p className="mb-2 text-[11px] font-semibold text-(--text-secondary) lg:text-xs">
-          Select Time
-        </p>
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-[11px] font-semibold text-(--text-secondary) lg:text-xs">
+            Select Time
+          </p>
+          <div
+            className="flex items-center gap-0.5 rounded-lg border border-(--border) p-0.5"
+            role="group"
+            aria-label="Time period"
+          >
+            <button
+              type="button"
+              onClick={() => switchTimePeriod("AM")}
+              aria-pressed={timePeriod === "AM"}
+              className={periodToggle(timePeriod === "AM")}
+            >
+              AM
+            </button>
+            <span className="px-0.5 text-[10px] text-(--text-muted)">|</span>
+            <button
+              type="button"
+              onClick={() => switchTimePeriod("PM")}
+              aria-pressed={timePeriod === "PM"}
+              className={periodToggle(timePeriod === "PM")}
+            >
+              PM
+            </button>
+          </div>
+        </div>
 
         {/* Mobile — 4 visible slots */}
         <div className="flex items-center gap-1 lg:hidden">
@@ -750,16 +818,20 @@ function DateTimeCard({
             disabled={!canScrollTimesLeft}
           />
           <div className="grid min-w-0 flex-1 grid-cols-4 gap-1">
-            {visibleTimes.map((time) => (
-              <button
-                key={time}
-                type="button"
-                onClick={() => onSelectTime(time)}
-                className={mobileTimePill(time === activeTime)}
-              >
-                {time}
-              </button>
-            ))}
+            {visibleTimes.map((time) => {
+              const { clock, period } = formatTimeParts(time);
+              return (
+                <button
+                  key={time}
+                  type="button"
+                  onClick={() => onSelectTime(time)}
+                  className={mobileTimePill(time === activeTime)}
+                >
+                  <span className="text-[10px]">{clock}</span>
+                  <span className="text-[8px] font-semibold">{period}</span>
+                </button>
+              );
+            })}
           </div>
           <RoundChevron
             dir="right"
@@ -771,7 +843,7 @@ function DateTimeCard({
         </div>
 
         {/* Desktop — scrollable row */}
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden min-w-0 items-center gap-2 lg:flex">
           <RoundChevron
             dir="left"
             label="Earlier times"
@@ -779,14 +851,14 @@ function DateTimeCard({
           />
           <div
             ref={timesRef}
-            className="flex flex-1 gap-2 overflow-x-auto scrollbar-none"
+            className="grid min-w-0 flex-1 auto-cols-[calc((100%-3rem)/7)] grid-flow-col gap-2 overflow-x-auto scrollbar-none"
           >
-            {times.map((time) => (
+            {filteredTimes.map((time) => (
               <button
                 key={time}
                 type="button"
                 onClick={() => onSelectTime(time)}
-                className={`${timePill(time === activeTime)} shrink-0`}
+                className={timePill(time === activeTime)}
               >
                 {time}
               </button>
