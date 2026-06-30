@@ -34,24 +34,35 @@ import { getIcon } from "../components/icons";
 import { ProfileFilterBar } from "../components/ProfileFilterBar";
 import { TopCategoriesSidebar } from "../components/TopCategoriesSidebar";
 import { ChatPanel } from "./ChatPanel";
+import { buildBookingHref } from "../../booking/components/lib/bookingUrl";
+import { ServiceSelectionAlert } from "../../booking/components/ServiceSelectionAlert";
 
 type ProfileTab = "profile" | "message";
 
 interface ExpertProfileContentProps {
   expert: ExpertProfile;
   topCategories: TopCategory[];
+  /** Tab to open on first render (e.g. "message" when arriving from Message). */
+  initialTab?: ProfileTab;
+  /** Services to pre-select (e.g. when returning from booking to add more). */
+  initialServiceIds?: string[];
 }
 
 export function ExpertProfileContent({
   expert,
   topCategories,
+  initialTab = "profile",
+  initialServiceIds = [],
 }: ExpertProfileContentProps) {
   const router = useRouter();
   const [activeCategoryId, setActiveCategoryId] = useState(
     expert.serviceCategories[0]?.id ?? "",
   );
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [activeTab, setActiveTab] = useState<ProfileTab>("profile");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(
+    () => new Set(initialServiceIds),
+  );
+  const [activeTab, setActiveTab] = useState<ProfileTab>(initialTab);
+  const [showServiceAlert, setShowServiceAlert] = useState(false);
 
   const activeCategory =
     expert.serviceCategories.find((c) => c.id === activeCategoryId) ??
@@ -81,6 +92,14 @@ export function ExpertProfileContent({
     });
   };
 
+  const goToBooking = () => {
+    if (selectedIds.size === 0) {
+      setShowServiceAlert(true);
+      return;
+    }
+    router.push(buildBookingHref(expert.id, selectedIds));
+  };
+
   const ratingMax = Math.max(
     1,
     ...expert.ratingBreakdown.map((bucket) => bucket.count),
@@ -108,6 +127,7 @@ export function ExpertProfileContent({
             ratingMax={ratingMax}
             activeTab={activeTab}
             onSelectTab={setActiveTab}
+            onGoToBooking={goToBooking}
           />
         </div>
 
@@ -138,6 +158,7 @@ export function ExpertProfileContent({
                 ratingMax={ratingMax}
                 activeTab={activeTab}
                 onSelectTab={setActiveTab}
+                onGoToBooking={goToBooking}
               />
 
               <ServicesPanel
@@ -147,6 +168,7 @@ export function ExpertProfileContent({
                 onCategorySelect={setActiveCategoryId}
                 selectedIds={selectedIds}
                 onToggleService={toggleService}
+                onGoToBooking={goToBooking}
               />
             </div>
           </div>
@@ -165,13 +187,14 @@ export function ExpertProfileContent({
               {selectedServices.length > 0 ? selectedTotal : priceFrom}
             </p>
           </div>
-          <Link
-            href="/booking"
+          <button
+            type="button"
+            onClick={goToBooking}
             className="primary-button flex h-11 flex-1 items-center justify-center gap-2 rounded-xl text-sm font-semibold text-white"
           >
             <CalendarCheck size={16} strokeWidth={1.8} />
             Book Appointment
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -188,6 +211,10 @@ export function ExpertProfileContent({
           </span>
         </button>
       )}
+      <ServiceSelectionAlert
+        open={showServiceAlert}
+        onClose={() => setShowServiceAlert(false)}
+      />
     </main>
   );
 }
@@ -217,9 +244,11 @@ function Stars({ rating, size = 13 }: { rating: number; size?: number }) {
 function ActionButtons({
   activeTab,
   onSelectTab,
+  onGoToBooking,
 }: {
   activeTab: ProfileTab;
   onSelectTab: (tab: ProfileTab) => void;
+  onGoToBooking: () => void;
 }) {
   const tabClass = (active: boolean) =>
     `flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg border px-2 text-xs font-medium transition-colors ${
@@ -230,13 +259,14 @@ function ActionButtons({
 
   return (
     <div className="flex items-center gap-2">
-      <Link
-        href="/booking"
+      <button
+        type="button"
+        onClick={onGoToBooking}
         className="primary-button flex h-10 flex-1 items-center justify-center gap-1.5 rounded-lg px-2 text-xs font-semibold text-white"
       >
         <CalendarCheck size={15} strokeWidth={1.8} className="shrink-0" />
         Book Now
-      </Link>
+      </button>
       <button
         type="button"
         onClick={() => onSelectTab("message")}
@@ -543,11 +573,13 @@ function DesktopProfileColumn({
   ratingMax,
   activeTab,
   onSelectTab,
+  onGoToBooking,
 }: {
   expert: ExpertProfile;
   ratingMax: number;
   activeTab: ProfileTab;
   onSelectTab: (tab: ProfileTab) => void;
+  onGoToBooking: () => void;
 }) {
   return (
     <div className="space-y-5">
@@ -607,7 +639,11 @@ function DesktopProfileColumn({
           </p>
 
           <div className="pt-4">
-            <ActionButtons activeTab={activeTab} onSelectTab={onSelectTab} />
+            <ActionButtons
+              activeTab={activeTab}
+              onSelectTab={onSelectTab}
+              onGoToBooking={onGoToBooking}
+            />
           </div>
         </div>
       </div>
@@ -634,6 +670,7 @@ function ServicesPanel({
   onCategorySelect,
   selectedIds,
   onToggleService,
+  onGoToBooking,
 }: {
   expert: ExpertProfile;
   activeCategoryId: string;
@@ -641,6 +678,7 @@ function ServicesPanel({
   onCategorySelect: (id: string) => void;
   selectedIds: Set<string>;
   onToggleService: (id: string) => void;
+  onGoToBooking: () => void;
 }) {
   return (
     <aside className="grid h-fit grid-cols-[88px_minmax(0,1fr)] gap-3 lg:sticky lg:top-20">
@@ -685,14 +723,20 @@ function ServicesPanel({
 
       {selectedIds.size > 0 && (
         <div className="col-span-2">
-          <SelectedServicesBar count={selectedIds.size} />
+          <SelectedServicesBar count={selectedIds.size} onGoToBooking={onGoToBooking} />
         </div>
       )}
     </aside>
   );
 }
 
-function SelectedServicesBar({ count }: { count: number }) {
+function SelectedServicesBar({
+  count,
+  onGoToBooking,
+}: {
+  count: number;
+  onGoToBooking: () => void;
+}) {
   return (
     <div className="flex items-center justify-between gap-2 rounded-xl border border-(--accent-primary) bg-(--bg-card) px-3 py-2.5">
       <span className="flex items-center gap-2">
@@ -706,13 +750,14 @@ function SelectedServicesBar({ count }: { count: number }) {
           </span>
         </span>
       </span>
-      <Link
-        href="/booking"
+      <button
+        type="button"
+        onClick={onGoToBooking}
         className="flex shrink-0 items-center gap-1 rounded-lg border border-(--border) px-3 py-1.5 text-[11px] font-medium text-(--text-primary) transition-colors hover:border-(--accent-primary)"
       >
         View Selected
         <ArrowRight size={12} strokeWidth={2} />
-      </Link>
+      </button>
     </div>
   );
 }
@@ -935,6 +980,7 @@ function MobileLayout({
   ratingMax,
   activeTab,
   onSelectTab,
+  onGoToBooking,
 }: {
   expert: ExpertProfile;
   activeCategoryId: string;
@@ -944,6 +990,7 @@ function MobileLayout({
   ratingMax: number;
   activeTab: ProfileTab;
   onSelectTab: (tab: ProfileTab) => void;
+  onGoToBooking: () => void;
 }) {
   const activeCategory =
     expert.serviceCategories.find((c) => c.id === activeCategoryId) ??
@@ -1021,7 +1068,11 @@ function MobileLayout({
           </p>
 
           <div className="mt-3">
-            <ActionButtons activeTab={activeTab} onSelectTab={onSelectTab} />
+            <ActionButtons
+              activeTab={activeTab}
+              onSelectTab={onSelectTab}
+              onGoToBooking={onGoToBooking}
+            />
           </div>
         </div>
       </div>
@@ -1084,7 +1135,7 @@ function MobileLayout({
 
         {selectedCount > 0 && (
           <div className="mt-3">
-            <SelectedServicesBar count={selectedCount} />
+            <SelectedServicesBar count={selectedCount} onGoToBooking={onGoToBooking} />
           </div>
         )}
       </section>

@@ -1,5 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   BadgeCheck,
   CalendarCheck,
@@ -11,6 +15,7 @@ import {
 } from "lucide-react";
 
 import type { Expert } from "../experts.types";
+import { ServiceSelectionAlert } from "../../booking/components/ServiceSelectionAlert";
 
 interface ExpertCardProps {
   expert: Expert;
@@ -19,7 +24,9 @@ interface ExpertCardProps {
 }
 
 export function ExpertCard({ expert, compact = false }: ExpertCardProps) {
+  const router = useRouter();
   const profileHref = `/experts/${expert.id}`;
+  const [showServiceAlert, setShowServiceAlert] = useState(false);
 
   const nameClass = compact
     ? "truncate text-[10px] font-semibold text-(--text-primary)"
@@ -46,21 +53,23 @@ export function ExpertCard({ expert, compact = false }: ExpertCardProps) {
     "flex h-7 w-full items-center justify-center gap-1 rounded-lg text-[10px] font-medium sm:h-7 sm:flex-1 sm:text-[9px] lg:h-8 lg:text-[10px]";
 
   return (
-    <article className="group flex h-full w-full flex-col overflow-hidden rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-glow)]">
+    <article className="group relative flex h-full w-full flex-col overflow-hidden rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-glow)]">
+      {/* Full-card click target → opens the expert profile. Interactive
+          controls below sit above this via z-index. */}
+      <Link
+        href={profileHref}
+        aria-label={`View ${expert.name}'s profile`}
+        className="absolute inset-0 z-[1]"
+      />
+
       <div className="relative aspect-[5/4] w-full overflow-hidden">
-        <Link
-          href={profileHref}
-          aria-label={`View ${expert.name}'s profile`}
-          className="absolute inset-0"
-        >
-          <Image
-            src={expert.image}
-            alt={expert.name}
-            fill
-            sizes="(max-width: 640px) 28vw, (max-width: 1280px) 25vw, 20vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        </Link>
+        <Image
+          src={expert.image}
+          alt={expert.name}
+          fill
+          sizes="(max-width: 640px) 28vw, (max-width: 1280px) 25vw, 20vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
 
         <button
           type="button"
@@ -72,13 +81,11 @@ export function ExpertCard({ expert, compact = false }: ExpertCardProps) {
       </div>
 
       <div
-        className={`flex flex-1 flex-col ${compact ? "gap-1 p-2" : "gap-1.5 p-2 sm:gap-2 sm:p-2.5 lg:p-3"}`}
+        className={`relative z-10 flex flex-1 flex-col ${compact ? "gap-1 p-2" : "gap-1.5 p-2 sm:gap-2 sm:p-2.5 lg:p-3"}`}
       >
         <div>
           <div className="flex items-center gap-1">
-            <Link href={profileHref} className={nameClass}>
-              {expert.name}
-            </Link>
+            <span className={nameClass}>{expert.name}</span>
             {expert.verified && (
               <BadgeCheck
                 size={compact ? 12 : 14}
@@ -121,17 +128,19 @@ export function ExpertCard({ expert, compact = false }: ExpertCardProps) {
           From <span className={priceClass}>{expert.currency}{expert.price}</span>
         </p>
 
-        <div className="mt-auto flex flex-col gap-1 pt-0.5 sm:flex-row sm:items-center">
-          <Link
-            href="/booking"
+        {/* Raised above the card overlay so each control works on its own. */}
+        <div className="relative z-10 mt-auto flex flex-col gap-1 pt-0.5 sm:flex-row sm:items-center">
+          <button
+            type="button"
+            onClick={() => setShowServiceAlert(true)}
             className={`primary-button text-white ${actionClass}`}
           >
             <CalendarCheck size={12} strokeWidth={1.8} />
             Book
-          </Link>
+          </button>
 
           <Link
-            href={`/specificexpertmessage/${expert.id}`}
+            href={`${profileHref}?tab=message`}
             className={`${actionClass} border border-(--border) bg-(--bg-card) text-(--text-primary) transition-colors hover:border-(--accent-primary)`}
           >
             <MessageSquare size={12} strokeWidth={1.8} />
@@ -148,6 +157,13 @@ export function ExpertCard({ expert, compact = false }: ExpertCardProps) {
           </Link>
         </div>
       </div>
+
+      <ServiceSelectionAlert
+        open={showServiceAlert}
+        onClose={() => setShowServiceAlert(false)}
+        actionLabel="Select Services"
+        onAction={() => router.push(profileHref)}
+      />
     </article>
   );
 }

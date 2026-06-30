@@ -10,6 +10,7 @@ import { ExpertProfileContent } from "./ExpertProfileContent";
 
 interface ExpertProfilePageProps {
   params: Promise<{ expertId: string }>;
+  searchParams: Promise<{ tab?: string; services?: string }>;
 }
 
 export async function generateStaticParams() {
@@ -35,8 +36,10 @@ export async function generateMetadata({
 
 export default async function ExpertProfilePage({
   params,
+  searchParams,
 }: ExpertProfilePageProps) {
   const { expertId } = await params;
+  const { tab, services } = await searchParams;
   const [expert, pageData] = await Promise.all([
     getExpertProfile(expertId),
     getExpertsPageData(),
@@ -46,10 +49,19 @@ export default async function ExpertProfilePage({
     notFound();
   }
 
+  const initialServiceIds = services
+    ? services
+        .split(",")
+        .map((id) => id.trim())
+        .filter(Boolean)
+    : [];
+
   return (
     <ExpertProfileContent
       expert={expert}
       topCategories={pageData.topCategories}
+      initialTab={tab === "message" ? "message" : "profile"}
+      initialServiceIds={initialServiceIds}
     />
   );
 }
