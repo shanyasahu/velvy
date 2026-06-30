@@ -18,7 +18,7 @@ export interface Expert {
   categoryId: string;
   /** Live availability indicator on listing cards. */
   isOnline: boolean;
-  /** Display hours, e.g. "9–5pm". */
+  /** Display hours, e.g. "7am–10pm". */
   availabilityHours: string;
 }
 

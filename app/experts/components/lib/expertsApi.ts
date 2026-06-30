@@ -115,16 +115,23 @@ const ONLINE_EXPERT_IDS = new Set([
   "mason-taylor",
 ]);
 
-const AVAILABILITY_HOURS = [
-  "9–5pm",
-  "10–6pm",
-  "8–4pm",
-  "9–7pm",
-  "11–8pm",
-  "8–3pm",
-  "7–3pm",
-  "10–4pm",
-];
+function formatAvailabilityHour(hour24: number): string {
+  const h = ((hour24 % 24) + 24) % 24;
+  if (h === 0) return "12am";
+  if (h === 12) return "12pm";
+  if (h < 12) return `${h}am`;
+  return `${h - 12}pm`;
+}
+
+/** Deterministic hours per expert — stable across server/client renders. */
+function getAvailabilityHours(expertId: string): string {
+  const hash = expertId
+    .split("")
+    .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const startHour = 6 + (hash % 6); // 6am–11am
+  const endHour = 17 + ((hash >> 3) % 6); // 5pm–10pm
+  return `${formatAvailabilityHour(startHour)}–${formatAvailabilityHour(endHour)}`;
+}
 
 function enrichExpert<T extends Expert>(expert: T): Expert {
   const override = overrides[expert.id];
@@ -133,12 +140,9 @@ function enrichExpert<T extends Expert>(expert: T): Expert {
     (expert as Expert & { isOnline?: boolean }).isOnline ??
     ONLINE_EXPERT_IDS.has(expert.id);
 
-  const hash = expert.id
-    .split("")
-    .reduce((sum, char) => sum + char.charCodeAt(0), 0);
   const availabilityHours =
     (expert as Expert & { availabilityHours?: string }).availabilityHours ??
-    AVAILABILITY_HOURS[hash % AVAILABILITY_HOURS.length];
+    getAvailabilityHours(expert.id);
 
   return { ...expert, isOnline, availabilityHours };
 }
