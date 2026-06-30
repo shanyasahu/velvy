@@ -653,9 +653,9 @@ function ServicesPanel({
   onGoToBooking: () => void;
 }) {
   return (
-    <aside className="grid h-fit grid-cols-[88px_minmax(0,1fr)] gap-3 lg:sticky lg:top-20">
+    <aside className="grid h-fit grid-cols-[88px_minmax(0,1fr)] items-start gap-3 lg:sticky lg:top-20">
       {/* Category rail */}
-      <nav className="flex flex-col gap-1.5 rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-2">
+      <nav className="flex h-fit flex-col gap-1.5 self-start rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-2">
         {expert.serviceCategories.map((category) => {
           const Icon = getIcon(category.icon);
           const active = category.id === activeCategoryId;
@@ -1075,8 +1075,8 @@ function MobileLayout({
           services
         </h2>
 
-        <div className="mt-3 grid grid-cols-[72px_minmax(0,1fr)] gap-2">
-          <nav className="flex flex-col gap-1.5">
+        <div className="mt-3 grid grid-cols-[72px_minmax(0,1fr)] items-start gap-2">
+          <nav className="flex h-fit flex-col gap-1.5 self-start">
             {expert.serviceCategories.map((category) => {
               const Icon = getIcon(category.icon);
               const active = category.id === activeCategoryId;

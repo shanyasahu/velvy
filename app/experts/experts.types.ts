@@ -16,6 +16,10 @@ export interface Expert {
   gender: Gender;
   /** Sub-category this expert belongs to (e.g. "facial-skin"). */
   categoryId: string;
+  /** Live availability indicator on listing cards. */
+  isOnline: boolean;
+  /** Display hours, e.g. "9–5pm". */
+  availabilityHours: string;
 }
 
 export interface TopCategory {

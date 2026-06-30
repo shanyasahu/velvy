@@ -42,7 +42,10 @@ export async function getExpertsPageData(): Promise<ExpertsPageData> {
     topCategories: categories.topCategories,
     subCategories: categories.subCategories,
     activeCategory: categories.activeCategory,
-    sections: experts.sections as ExpertSection[],
+    sections: (experts.sections as ExpertSection[]).map((section) => ({
+      ...section,
+      experts: section.experts.map(enrichExpert),
+    })),
     filters: filters.filters as FilterGroup[],
     sortOptions: filters.sortOptions as SortOption[],
     genderOptions: filters.genderOptions,
@@ -96,8 +99,49 @@ type ProfileOverride = {
   specialization: string;
   skills: string[];
   primaryServiceCategory?: string;
+  isOnline?: boolean;
 };
 const overrides = profilesData.overrides as Record<string, ProfileOverride>;
+
+/** Demo online set — replace with API availability when wired up. */
+const ONLINE_EXPERT_IDS = new Set([
+  "sophia-patel",
+  "isabella-chen",
+  "michael-lee",
+  "daniel-smith",
+  "ethan-carter-barber",
+  "liam-brown",
+  "noah-wilson",
+  "mason-taylor",
+]);
+
+const AVAILABILITY_HOURS = [
+  "9–5pm",
+  "10–6pm",
+  "8–4pm",
+  "9–7pm",
+  "11–8pm",
+  "8–3pm",
+  "7–3pm",
+  "10–4pm",
+];
+
+function enrichExpert<T extends Expert>(expert: T): Expert {
+  const override = overrides[expert.id];
+  const isOnline =
+    override?.isOnline ??
+    (expert as Expert & { isOnline?: boolean }).isOnline ??
+    ONLINE_EXPERT_IDS.has(expert.id);
+
+  const hash = expert.id
+    .split("")
+    .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  const availabilityHours =
+    (expert as Expert & { availabilityHours?: string }).availabilityHours ??
+    AVAILABILITY_HOURS[hash % AVAILABILITY_HOURS.length];
+
+  return { ...expert, isOnline, availabilityHours };
+}
 
 /** Orders the service catalog so the expert's primary category comes first. */
 function orderServiceCategories(primaryId?: string): ServiceCategory[] {
@@ -133,7 +177,7 @@ export async function getExpertProfile(
   }));
 
   return {
-    ...expert,
+    ...enrichExpert(expert),
     coverImage: override?.coverImage ?? expert.image,
     availableToday: override?.availableToday ?? true,
     experienceBadge: override?.experienceBadge ?? "Verified Expert",

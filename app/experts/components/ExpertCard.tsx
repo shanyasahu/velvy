@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import {
   BadgeCheck,
   CalendarCheck,
+  Clock,
   Eye,
   MapPin,
   MessageSquare,
@@ -71,6 +72,13 @@ export function ExpertCard({ expert, compact = false }: ExpertCardProps) {
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
 
+        <span
+          className={`absolute left-1.5 top-1.5 z-10 h-2.5 w-2.5 rounded-full sm:h-3 sm:w-3 lg:left-2 lg:top-2 ${
+            expert.isOnline ? "bg-(--success)" : "bg-(--danger)"
+          }`}
+          aria-label={expert.isOnline ? "Online" : "Offline"}
+        />
+
         <button
           type="button"
           aria-label={`Play ${expert.name}'s intro video`}
@@ -124,9 +132,17 @@ export function ExpertCard({ expert, compact = false }: ExpertCardProps) {
           </div>
         )}
 
-        <p className="text-[9px] text-(--text-muted) sm:text-[10px] lg:text-[11px]">
-          From <span className={priceClass}>{expert.currency}{expert.price}</span>
-        </p>
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-[9px] text-(--text-muted) sm:text-[10px] lg:text-[11px]">
+            From <span className={priceClass}>{expert.currency}{expert.price}</span>
+          </p>
+          <span
+            className={`inline-flex shrink-0 items-center gap-0.5 ${tagClass}`}
+          >
+            <Clock size={compact ? 8 : 9} strokeWidth={1.8} className="shrink-0" />
+            {expert.availabilityHours}
+          </span>
+        </div>
 
         {/* Raised above the card overlay so each control works on its own. */}
         <div className="relative z-10 mt-auto flex flex-col gap-1 pt-0.5 sm:flex-row sm:items-center">
