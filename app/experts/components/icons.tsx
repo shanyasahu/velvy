@@ -78,6 +78,7 @@ const ICONS: Record<string, IconComponent> = {
   styling: Wand2,
   fade: Slice,
   shave: Activity,
+  grooming: Brush,
 };
 
 const FALLBACK_ICON: IconComponent = LayoutGrid;

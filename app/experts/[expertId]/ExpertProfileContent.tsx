@@ -479,6 +479,7 @@ function InfoGrid({
     { icon: Award, label: "Experience", value: expert.experienceSummary },
     { icon: Sparkles, label: "Specialization", value: expert.specialization },
     { icon: MapPin, label: "Location", value: `${expert.distance} from you` },
+    { icon: Clock, label: "Availability", value: expert.availabilityHours },
   ];
 
   const renderItem = (
@@ -511,8 +512,8 @@ function InfoGrid({
         {infoItems.map((item) => renderItem(item, item.label))}
       </div>
 
-      {/* Desktop: static 5-column grid */}
-      <div className="hidden gap-3 lg:grid lg:grid-cols-5">
+      {/* Desktop: 3×2 grid */}
+      <div className="hidden gap-3 lg:grid lg:grid-cols-3">
         {infoItems.map((item) => renderItem(item, item.label))}
       </div>
     </div>

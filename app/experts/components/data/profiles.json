@@ -148,6 +148,20 @@
         { "id": "acupuncture", "name": "Acupuncture", "price": 110, "duration": "60 min", "image": "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=400&q=70" },
         { "id": "breathwork", "name": "Breathwork Therapy", "price": 75, "duration": "45 min", "image": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=400&q=70" }
       ]
+    },
+    {
+      "id": "barbering-grooming",
+      "label": "Barbering & Grooming",
+      "icon": "grooming",
+      "services": [
+        { "id": "mens-haircut", "name": "Men's Haircut", "price": 45, "duration": "30 min", "image": "https://images.unsplash.com/photo-1622286342621-4bd7861f69d3?auto=format&fit=crop&w=400&q=70" },
+        { "id": "beard-trim", "name": "Beard Trim & Shape", "price": 30, "duration": "20 min", "image": "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?auto=format&fit=crop&w=400&q=70" },
+        { "id": "hot-towel-shave", "name": "Hot Towel Shave", "price": 55, "duration": "45 min", "image": "https://images.unsplash.com/photo-1503951914875-529162db19a8?auto=format&fit=crop&w=400&q=70" },
+        { "id": "skin-fade", "name": "Skin Fade", "price": 50, "duration": "40 min", "image": "https://images.unsplash.com/photo-1593702274477-b9b2d5f4f6b1?auto=format&fit=crop&w=400&q=70" },
+        { "id": "beard-oil-treatment", "name": "Beard Oil Treatment", "price": 25, "duration": "15 min", "image": "https://images.unsplash.com/photo-1621607502210-7b81577ad217?auto=format&fit=crop&w=400&q=70" },
+        { "id": "kids-haircut", "name": "Kids Haircut", "price": 35, "duration": "25 min", "image": "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=70" },
+        { "id": "haircut-beard-combo", "name": "Haircut & Beard Combo", "price": 65, "duration": "50 min", "image": "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?auto=format&fit=crop&w=400&q=70" }
+      ]
     }
   ],
   "reviewPool": [
