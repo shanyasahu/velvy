@@ -817,7 +817,7 @@ function ServicesGrid({
 
       <div
         ref={gridRef}
-        className={`mt-3 flex-1 auto-rows-min content-start ${gridClassName}`}
+        className={`mt-3 flex-1 auto-rows-fr items-stretch ${gridClassName}`}
       >
         {pageItems.map((service) => (
           <ServiceCard
@@ -887,13 +887,13 @@ function ServiceCard({
       type="button"
       data-service-card
       onClick={onToggle}
-      className={`group flex h-fit flex-col overflow-hidden rounded-xl border bg-(--bg-card) text-left transition-all ${
+      className={`group flex h-full flex-col overflow-hidden rounded-xl border bg-(--bg-card) text-left transition-all ${
         selected
           ? "border-(--accent-primary) shadow-[var(--shadow-glow)]"
           : "border-(--border) hover:border-(--accent-primary)"
       }`}
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden">
+      <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden">
         <Image
           src={service.image}
           alt={service.name}
@@ -911,27 +911,27 @@ function ServiceCard({
           <Check size={12} strokeWidth={2.5} />
         </span>
       </div>
-      <div className="flex flex-1 flex-col gap-0.5 p-1.5">
-        <p className="truncate text-[11px] font-semibold leading-tight text-(--text-primary)">
+      <div className="flex min-h-[3.25rem] flex-1 flex-col gap-0.5 p-1.5">
+        <p className="line-clamp-2 min-h-[2rem] text-[10px] font-semibold leading-tight text-(--text-primary)">
           {service.name}
         </p>
-        <p className="text-[11px] font-bold text-(--brand-gold)">
+        <p className="text-[10px] font-bold text-(--brand-gold)">
           {currency}
           {service.price}
         </p>
         <div className="mt-auto flex items-center justify-between pt-0.5">
-          <span className="flex items-center gap-1 text-[9px] font-medium text-(--text-secondary)">
-            <Clock size={10} strokeWidth={1.8} />
+          <span className="flex items-center gap-0.5 text-[8px] font-medium text-(--text-secondary)">
+            <Clock size={9} strokeWidth={1.8} />
             {service.duration}
           </span>
           <span
-            className={`flex h-5 w-5 items-center justify-center rounded-full transition-colors ${
+            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-colors ${
               selected
                 ? "bg-(--accent-primary) text-white"
                 : "border border-(--border) text-(--accent-primary)"
             }`}
           >
-            {selected ? <Check size={11} strokeWidth={2.5} /> : <Plus size={11} strokeWidth={2.5} />}
+            {selected ? <Check size={10} strokeWidth={2.5} /> : <Plus size={10} strokeWidth={2.5} />}
           </span>
         </div>
       </div>
