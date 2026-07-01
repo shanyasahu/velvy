@@ -8,6 +8,15 @@ export interface LocationSuggestion {
   suburb: string;
 }
 
+/** Availability state for a calendar day (per service). */
+export type DayAvailabilityStatus = "available" | "limited" | "full" | "closed";
+
+/** Per-service date & time selection. */
+export interface ServiceScheduleSelection {
+  dayId: string;
+  time: string;
+}
+
 /** A selectable calendar day in the date picker. */
 export interface BookingDay {
   id: string;
