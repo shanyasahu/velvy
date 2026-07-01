@@ -60,7 +60,6 @@ export function ChatPanel({ expert }: { expert: ExpertProfile }) {
               sizes="40px"
               className="object-cover"
             />
-            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-(--bg-card) bg-(--success)" />
           </span>
           <div>
             <p className="text-sm font-semibold text-(--text-primary)">
