@@ -128,9 +128,9 @@ export function ServiceTimePicker({
         anchorRef={triggerRef}
       >
         <div className="px-2 py-2 lg:px-2.5 lg:py-2.5">
-          <div className="mb-2 flex items-center justify-between gap-2">
+          <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between lg:mb-2">
             <p className="text-[9px] font-medium text-(--text-muted) lg:text-[11px]">
-              Showtimes on {shortDay}
+              Available times on {shortDay}
             </p>
             <div
               className="flex rounded-lg border border-(--border) bg-(--bg-secondary)/40 p-0.5"
@@ -165,7 +165,7 @@ export function ServiceTimePicker({
             ref={scrollRef}
             role="listbox"
             aria-label={`${period} time slots`}
-            className="flex gap-2 overflow-x-auto overscroll-x-contain scroll-smooth scrollbar-none [-webkit-overflow-scrolling:touch]"
+            className="flex max-h-44 flex-col gap-1 overflow-y-auto overscroll-contain lg:max-h-none lg:flex-row lg:gap-2 lg:overflow-x-auto lg:overflow-y-hidden lg:scroll-smooth lg:scrollbar-none"
           >
             {filteredTimes.length === 0 ? (
               <p className="w-full py-3 text-center text-[10px] text-(--text-muted) lg:text-xs">
@@ -184,7 +184,7 @@ export function ServiceTimePicker({
                     role="option"
                     aria-selected={active}
                     onClick={() => handleSelect(time)}
-                    className={`shrink-0 rounded-lg border px-3 py-2 text-[10px] font-semibold transition-colors lg:px-3.5 lg:py-2.5 lg:text-xs ${
+                    className={`w-full rounded-lg border px-3 py-2.5 text-left text-[11px] font-medium transition-colors lg:w-auto lg:shrink-0 lg:px-3.5 lg:py-2.5 lg:text-center lg:text-xs ${
                       active
                         ? "primary-button border-transparent text-white shadow-[var(--shadow-glow)]"
                         : "border-(--accent-primary) bg-(--bg-card) text-(--accent-primary) hover:bg-(--bg-secondary)"
@@ -197,7 +197,7 @@ export function ServiceTimePicker({
             )}
           </div>
 
-          <div className="mt-2.5 flex items-center justify-center gap-x-3 border-t border-(--border) pt-2 text-[8px] text-(--text-muted) lg:text-[9px]">
+          <div className="mt-2.5 hidden items-center justify-center gap-x-3 border-t border-(--border) pt-2 text-[8px] text-(--text-muted) lg:flex lg:text-[9px]">
             <span className="flex items-center gap-1">
               <span className="h-2 w-4 rounded-sm border border-(--accent-primary) bg-(--bg-card)" />
               Available

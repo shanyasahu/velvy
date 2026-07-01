@@ -180,11 +180,11 @@ export function ServiceDatePicker({
         open={open}
         onClose={() => onOpenChange(false)}
         anchorRef={triggerRef}
-        fixedWidth={236}
+        fixedWidth={268}
       >
-        <div className="flex flex-col items-center px-2 py-1.5 lg:px-2.5 lg:py-2">
-          <div className="w-[13.25rem]">
-            <div className="flex items-center justify-between gap-1">
+        <div className="flex flex-col items-center px-3 py-2 lg:px-3.5 lg:py-2.5">
+          <div className="w-[15.5rem]">
+            <div className="flex items-center justify-between gap-2 px-0.5">
               <button
                 type="button"
                 onClick={goPrev}
@@ -208,7 +208,7 @@ export function ServiceDatePicker({
               </button>
             </div>
 
-            <div className="mt-1 grid w-full grid-cols-7 gap-1">
+            <div className="mt-2 grid grid-cols-7 gap-x-2 gap-y-2 place-items-center">
               {WEEKDAY_HEADERS.map((label, index) => (
                 <span
                   key={`${label}-${index}`}
@@ -245,7 +245,7 @@ export function ServiceDatePicker({
                       if (!match || !selectable) return;
                       handleSelectDay(match.id);
                     }}
-                    className={`flex size-7 items-center justify-center rounded border text-[9px] transition-colors ${dayBoxClasses(
+                    className={`flex size-7 items-center justify-center rounded-full border text-[9px] transition-colors ${dayBoxClasses(
                       status,
                       active,
                       selectable,
@@ -265,8 +265,8 @@ export function ServiceDatePicker({
             </div>
           </div>
 
-          <div className="mt-2 w-full border-t border-(--border) pt-1.5">
-            <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[7px] leading-none text-(--text-muted) lg:text-[8px]">
+          <div className="mt-3 w-full border-t border-(--border) pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1.5 text-[7px] leading-none text-(--text-muted) lg:text-[8px]">
               <span className="flex shrink-0 items-center gap-0.5">
                 <span className="flex h-2.5 w-2.5 items-center justify-center rounded border border-(--accent-primary) bg-(--bg-card)" />
                 Available
