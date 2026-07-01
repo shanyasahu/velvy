@@ -482,14 +482,8 @@ function InfoGrid({
     { icon: Clock, label: "Availability", value: expert.availabilityHours },
   ];
 
-  const renderItem = (
-    { icon: Icon, label, value }: (typeof infoItems)[number],
-    key: string,
-  ) => (
-    <div
-      key={key}
-      className="flex flex-col items-center gap-1.5 text-center"
-    >
+  const renderItem = ({ icon: Icon, label, value }: (typeof infoItems)[number]) => (
+    <div className="flex flex-col items-center gap-1 text-center">
       <span className="primary-button flex h-10 w-10 items-center justify-center rounded-full text-white">
         <Icon size={18} strokeWidth={1.8} />
       </span>
@@ -505,16 +499,24 @@ function InfoGrid({
   return (
     <div
       ref={scrollAnchorRef}
-      className="scroll-mt-24 rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-4"
+      className="scroll-mt-24 rounded-[var(--radius-md)] border border-(--border) bg-(--bg-card) p-4 lg:py-3"
     >
       {/* Mobile: 3-column grid so every highlight is fully visible */}
       <div className="grid grid-cols-3 gap-x-2 gap-y-4 lg:hidden">
-        {infoItems.map((item) => renderItem(item, item.label))}
+        {infoItems.map((item) => (
+          <div key={item.label}>{renderItem(item)}</div>
+        ))}
       </div>
 
-      {/* Desktop: 3×2 grid */}
-      <div className="hidden gap-3 lg:grid lg:grid-cols-3">
-        {infoItems.map((item) => renderItem(item, item.label))}
+      {/* Desktop: single row, spaced edge-to-edge; scrolls when narrow */}
+      <div className="scrollbar-none hidden overflow-x-auto overscroll-x-contain lg:block">
+        <div className="flex w-full min-w-max justify-between gap-3">
+          {infoItems.map((item) => (
+            <div key={item.label} className="shrink-0">
+              {renderItem(item)}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -809,17 +811,14 @@ function ServicesGrid({
   const pageItems = services.slice(start, start + perPage);
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex min-w-0 flex-col self-start">
       <div className="flex items-center justify-between gap-2">
         <h3 className="truncate text-sm font-semibold text-(--text-primary)">
           {title}
         </h3>
       </div>
 
-      <div
-        ref={gridRef}
-        className={`mt-3 flex-1 auto-rows-fr items-stretch ${gridClassName}`}
-      >
+      <div ref={gridRef} className={`mt-3 items-stretch ${gridClassName}`}>
         {pageItems.map((service) => (
           <ServiceCard
             key={service.id}
@@ -912,7 +911,7 @@ function ServiceCard({
           <Check size={12} strokeWidth={2.5} />
         </span>
       </div>
-      <div className="flex min-h-[3.25rem] flex-1 flex-col gap-0.5 p-1.5">
+      <div className="flex flex-1 flex-col gap-0.5 p-1.5">
         <p className="line-clamp-2 min-h-[2rem] text-[10px] font-semibold leading-tight text-(--text-primary)">
           {service.name}
         </p>
@@ -1117,6 +1116,7 @@ function MobileLayout({
             onToggleService={onToggleService}
             gridClassName="grid grid-cols-3 gap-1.5"
             columns={3}
+            rowsPerPage={4}
           />
         </div>
 

@@ -367,10 +367,10 @@ function SelectedServicesCard({
                 </button>
               </div>
               <div className="px-1.5 py-1.5">
-                <p className="truncate text-[11px] font-semibold leading-tight text-(--text-primary)">
+                <p className="text-[11px] font-semibold leading-snug text-(--text-primary)">
                   {service.name}
                 </p>
-                <p className="mt-0.5 truncate text-[10px] leading-tight text-(--text-secondary)">
+                <p className="mt-0.5 text-[10px] leading-tight text-(--text-secondary)">
                   {service.duration} ·{" "}
                   <span className="font-semibold text-(--brand-gold)">
                     {currency}
