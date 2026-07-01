@@ -18,6 +18,8 @@ interface ScheduleDropdownPanelProps {
   children: ReactNode;
   className?: string;
   minWidth?: number;
+  /** When set, panel uses this exact width instead of matching the anchor. */
+  fixedWidth?: number;
   /** Extra space reserved at the bottom of the viewport (e.g. mobile sticky bars). */
   bottomInset?: number;
 }
@@ -34,6 +36,7 @@ export function ScheduleDropdownPanel({
   children,
   className = "",
   minWidth = 0,
+  fixedWidth,
   bottomInset,
 }: ScheduleDropdownPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -53,7 +56,7 @@ export function ScheduleDropdownPanel({
       const reservedBottom = bottomInset ?? getDefaultBottomInset();
       const bottomLimit = window.innerHeight - viewportPadding - reservedBottom;
       const panelHeight = panel?.offsetHeight ?? 240;
-      const panelWidth = Math.max(rect.width, minWidth);
+      const panelWidth = fixedWidth ?? Math.max(rect.width, minWidth);
       const maxLeft = window.innerWidth - panelWidth - viewportPadding;
       const left = Math.max(
         viewportPadding,
@@ -101,7 +104,7 @@ export function ScheduleDropdownPanel({
       window.removeEventListener("resize", updatePosition);
       window.removeEventListener("scroll", updatePosition, true);
     };
-  }, [open, anchorRef, minWidth, bottomInset, children]);
+  }, [open, anchorRef, minWidth, fixedWidth, bottomInset, children]);
 
   useEffect(() => {
     if (!open) return;

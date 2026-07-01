@@ -42,14 +42,31 @@ interface ServiceDatePickerProps {
   onOpenChange: (open: boolean) => void;
 }
 
-function StatusDot({ status }: { status: DayAvailabilityStatus }) {
-  if (status === "available") {
-    return <span className="h-1 w-1 rounded-full bg-(--success)" aria-hidden />;
+function dayBoxClasses(
+  status: DayAvailabilityStatus,
+  active: boolean,
+  selectable: boolean,
+  hasMatch: boolean,
+): string {
+  if (active) {
+    return "primary-button border-transparent font-semibold text-white";
   }
+
+  if (!hasMatch || !selectable) {
+    if (status === "full" && hasMatch) {
+      return "border-(--border) bg-(--bg-secondary)/70 text-(--text-muted)";
+    }
+    if (status === "closed" && hasMatch) {
+      return "border-(--border) bg-(--bg-secondary)/40 text-(--text-muted)";
+    }
+    return "border-transparent text-(--text-muted)/30";
+  }
+
   if (status === "limited") {
-    return <span className="h-1 w-1 rounded-full bg-orange-400" aria-hidden />;
+    return "border-(--brand-gold) bg-(--bg-card) text-(--accent-primary) hover:bg-(--bg-secondary)";
   }
-  return null;
+
+  return "border-(--accent-primary) bg-(--bg-card) text-(--text-primary) hover:bg-(--bg-secondary)";
 }
 
 export function ServiceDatePicker({
@@ -163,47 +180,48 @@ export function ServiceDatePicker({
         open={open}
         onClose={() => onOpenChange(false)}
         anchorRef={triggerRef}
-        minWidth={280}
+        fixedWidth={236}
       >
-        <div>
-          <div className="px-2 py-1.5 lg:px-2.5 lg:py-2">
-            <div className="flex items-center justify-between gap-0.5">
-            <button
-              type="button"
-              onClick={goPrev}
-              disabled={!canPrev}
-              aria-label="Previous month"
-              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-(--border) text-(--text-secondary) transition-colors hover:border-(--accent-primary) disabled:cursor-not-allowed disabled:opacity-40 lg:h-7 lg:w-7"
-            >
-              <ChevronLeft size={12} strokeWidth={2} />
-            </button>
-            <span className="truncate text-[10px] font-semibold text-(--text-primary) lg:text-xs">
-              {MONTH_NAMES[view.month].slice(0, 3)} {view.year}
-            </span>
-            <button
-              type="button"
-              onClick={goNext}
-              disabled={!canNext}
-              aria-label="Next month"
-              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-(--border) text-(--text-secondary) transition-colors hover:border-(--accent-primary) disabled:cursor-not-allowed disabled:opacity-40 lg:h-7 lg:w-7"
-            >
-              <ChevronRight size={12} strokeWidth={2} />
-            </button>
-          </div>
+        <div className="flex flex-col items-center px-2 py-1.5 lg:px-2.5 lg:py-2">
+          <div className="w-[13.25rem]">
+            <div className="flex items-center justify-between gap-1">
+              <button
+                type="button"
+                onClick={goPrev}
+                disabled={!canPrev}
+                aria-label="Previous month"
+                className="flex size-5 shrink-0 items-center justify-center rounded-full border border-(--border) text-(--text-secondary) transition-colors hover:border-(--accent-primary) disabled:cursor-not-allowed disabled:opacity-40 lg:size-6"
+              >
+                <ChevronLeft size={11} strokeWidth={2} />
+              </button>
+              <span className="truncate text-[9px] font-semibold text-(--text-primary) lg:text-[10px]">
+                {MONTH_NAMES[view.month].slice(0, 3)} {view.year}
+              </span>
+              <button
+                type="button"
+                onClick={goNext}
+                disabled={!canNext}
+                aria-label="Next month"
+                className="flex size-5 shrink-0 items-center justify-center rounded-full border border-(--border) text-(--text-secondary) transition-colors hover:border-(--accent-primary) disabled:cursor-not-allowed disabled:opacity-40 lg:size-6"
+              >
+                <ChevronRight size={11} strokeWidth={2} />
+              </button>
+            </div>
 
-          <div className="mt-1.5">
-            <div className="grid grid-cols-7 gap-px">
+            <div className="mt-1 grid w-full grid-cols-7 gap-1">
               {WEEKDAY_HEADERS.map((label, index) => (
                 <span
                   key={`${label}-${index}`}
-                  className="flex h-4 items-center justify-center text-[8px] font-semibold text-(--text-muted) lg:h-5 lg:text-[10px]"
+                  className="flex size-7 items-center justify-center text-[8px] font-semibold text-(--text-muted)"
                 >
                   {label}
                 </span>
               ))}
 
               {cells.map((day, index) => {
-                if (day === null) return <span key={`blank-${index}`} />;
+                if (day === null) {
+                  return <span key={`blank-${index}`} className="size-7" aria-hidden />;
+                }
 
                 const iso = `${view.year}-${String(view.month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
                 const match = availableByIso.get(iso);
@@ -216,6 +234,7 @@ export function ServiceDatePicker({
                       : "closed";
                 const selectable = Boolean(match) && !isPast && isDaySelectable(status);
                 const active = match?.id === activeDayId;
+                const hasMatch = Boolean(match) && !isPast;
 
                 return (
                   <button
@@ -226,49 +245,48 @@ export function ServiceDatePicker({
                       if (!match || !selectable) return;
                       handleSelectDay(match.id);
                     }}
-                    className={`mx-auto flex h-7 w-full flex-col items-center justify-center gap-px rounded-md text-[9px] transition-colors lg:h-9 lg:rounded-lg lg:text-xs ${
-                      active
-                        ? "primary-button font-semibold text-white"
-                        : selectable
-                          ? "text-(--text-primary) hover:bg-(--bg-secondary)"
-                          : "cursor-not-allowed text-(--text-muted)/50"
-                    }`}
+                    className={`flex size-7 items-center justify-center rounded border text-[9px] transition-colors ${dayBoxClasses(
+                      status,
+                      active,
+                      selectable,
+                      hasMatch,
+                    )} ${!selectable ? "cursor-not-allowed" : ""}`}
                   >
-                    {status === "full" ? (
-                      <Lock size={9} strokeWidth={1.8} className="text-(--text-muted)" />
-                    ) : status === "closed" && match && !isPast ? (
-                      <X size={9} strokeWidth={2} className="text-(--danger)" />
+                    {status === "full" && hasMatch ? (
+                      <Lock size={9} strokeWidth={1.8} className="shrink-0" />
+                    ) : status === "closed" && hasMatch ? (
+                      <X size={9} strokeWidth={2} className="shrink-0" />
                     ) : (
-                      <>
-                        <span>{day}</span>
-                        {match && !isPast && <StatusDot status={status} />}
-                      </>
+                      <span>{day}</span>
                     )}
                   </button>
                 );
               })}
             </div>
           </div>
-          </div>
 
-          <div className="border-t border-(--border) px-2 py-1.5 lg:px-2.5 lg:py-2">
-            <div className="flex items-center justify-center gap-x-2 text-[7px] leading-none whitespace-nowrap text-(--text-muted) sm:gap-x-3 sm:text-[8px] lg:text-[10px]">
-            <span className="flex shrink-0 items-center gap-0.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-(--success)" />
-              Available
-            </span>
-            <span className="flex shrink-0 items-center gap-0.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-orange-400" />
-              Few slots
-            </span>
-            <span className="flex shrink-0 items-center gap-0.5">
-              <Lock size={9} strokeWidth={1.8} />
-              Full
-            </span>
-            <span className="flex shrink-0 items-center gap-0.5">
-              <X size={9} strokeWidth={2} className="text-(--danger)" />
-              Closed
-            </span>
+          <div className="mt-2 w-full border-t border-(--border) pt-1.5">
+            <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[7px] leading-none text-(--text-muted) lg:text-[8px]">
+              <span className="flex shrink-0 items-center gap-0.5">
+                <span className="flex h-2.5 w-2.5 items-center justify-center rounded border border-(--accent-primary) bg-(--bg-card)" />
+                Available
+              </span>
+              <span className="flex shrink-0 items-center gap-0.5">
+                <span className="flex h-2.5 w-2.5 items-center justify-center rounded border border-(--brand-gold) bg-(--bg-card)" />
+                Few slots
+              </span>
+              <span className="flex shrink-0 items-center gap-0.5">
+                <span className="flex h-2.5 w-2.5 items-center justify-center rounded border border-(--border) bg-(--bg-secondary)/70">
+                  <Lock size={7} strokeWidth={1.8} />
+                </span>
+                Full
+              </span>
+              <span className="flex shrink-0 items-center gap-0.5">
+                <span className="flex h-2.5 w-2.5 items-center justify-center rounded border border-(--border) bg-(--bg-secondary)/40">
+                  <X size={7} strokeWidth={2} />
+                </span>
+                Closed
+              </span>
             </div>
           </div>
         </div>

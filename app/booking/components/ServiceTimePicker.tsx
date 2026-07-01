@@ -27,12 +27,20 @@ export function ServiceTimePicker({
     activeTime ? getTimePeriod(activeTime) : "AM",
   );
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const slotRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   useEffect(() => {
     if (activeTime) {
       setPeriod(getTimePeriod(activeTime));
     }
   }, [activeTime]);
+
+  useEffect(() => {
+    if (!open || !activeTime) return;
+    const activeSlot = slotRefs.current[activeTime];
+    activeSlot?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }, [open, activeTime, period]);
 
   const shortDay = dateLabel.split(",")[0] ?? dateLabel;
 
@@ -119,69 +127,86 @@ export function ServiceTimePicker({
         onClose={() => onOpenChange(false)}
         anchorRef={triggerRef}
       >
-        <div className="border-b border-(--border) px-2 py-1.5 lg:px-2.5 lg:py-2">
-          <p className="mb-1.5 text-[9px] font-medium text-(--text-muted) lg:text-[11px]">
-            Available times on {shortDay}
-          </p>
-          <div
-            className="flex rounded-lg border border-(--border) bg-(--bg-secondary)/40 p-0.5"
-            role="tablist"
-            aria-label="Time period"
-          >
-            {(["AM", "PM"] as const).map((value) => {
-              const count = value === "AM" ? amTimes.length : pmTimes.length;
-              const active = period === value;
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  role="tab"
-                  aria-selected={active}
-                  disabled={count === 0}
-                  onClick={() => setPeriod(value)}
-                  className={`flex-1 rounded-md px-2 py-1 text-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 lg:py-1.5 lg:text-xs ${
-                    active
-                      ? "primary-button text-white"
-                      : "text-(--text-secondary) hover:text-(--text-primary)"
-                  }`}
-                >
-                  {value}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div
-          className="max-h-44 overflow-y-auto overscroll-contain px-2 py-1.5 lg:max-h-52 lg:px-2.5 lg:py-2"
-          role="listbox"
-          aria-label={`${period} time slots`}
-        >
-          {filteredTimes.length === 0 ? (
-            <p className="py-2 text-center text-[10px] text-(--text-muted) lg:text-xs">
-              No {period} slots on {shortDay}.
+        <div className="px-2 py-2 lg:px-2.5 lg:py-2.5">
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <p className="text-[9px] font-medium text-(--text-muted) lg:text-[11px]">
+              Showtimes on {shortDay}
             </p>
-          ) : (
-            filteredTimes.map((time) => {
-              const active = time === activeTime;
-              return (
-                <button
-                  key={time}
-                  type="button"
-                  role="option"
-                  aria-selected={active}
-                  onClick={() => handleSelect(time)}
-                  className={`w-full rounded-lg border px-2 py-2 text-left text-[11px] font-medium transition-colors lg:py-2.5 lg:text-xs ${
-                    active
-                      ? "primary-button border-transparent text-white"
-                      : "border-transparent bg-transparent text-(--text-primary) hover:border-(--border) hover:bg-(--bg-secondary)/60"
-                  }`}
-                >
-                  {time}
-                </button>
-              );
-            })
-          )}
+            <div
+              className="flex rounded-lg border border-(--border) bg-(--bg-secondary)/40 p-0.5"
+              role="tablist"
+              aria-label="Time period"
+            >
+              {(["AM", "PM"] as const).map((value) => {
+                const count = value === "AM" ? amTimes.length : pmTimes.length;
+                const active = period === value;
+                return (
+                  <button
+                    key={value}
+                    type="button"
+                    role="tab"
+                    aria-selected={active}
+                    disabled={count === 0}
+                    onClick={() => setPeriod(value)}
+                    className={`rounded-md px-2 py-0.5 text-[9px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 lg:px-2.5 lg:py-1 lg:text-[10px] ${
+                      active
+                        ? "primary-button text-white"
+                        : "text-(--text-secondary) hover:text-(--accent-primary)"
+                    }`}
+                  >
+                    {value}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div
+            ref={scrollRef}
+            role="listbox"
+            aria-label={`${period} time slots`}
+            className="flex gap-2 overflow-x-auto overscroll-x-contain scroll-smooth scrollbar-none [-webkit-overflow-scrolling:touch]"
+          >
+            {filteredTimes.length === 0 ? (
+              <p className="w-full py-3 text-center text-[10px] text-(--text-muted) lg:text-xs">
+                No {period} slots on {shortDay}.
+              </p>
+            ) : (
+              filteredTimes.map((time) => {
+                const active = time === activeTime;
+                return (
+                  <button
+                    key={time}
+                    ref={(node) => {
+                      slotRefs.current[time] = node;
+                    }}
+                    type="button"
+                    role="option"
+                    aria-selected={active}
+                    onClick={() => handleSelect(time)}
+                    className={`shrink-0 rounded-lg border px-3 py-2 text-[10px] font-semibold transition-colors lg:px-3.5 lg:py-2.5 lg:text-xs ${
+                      active
+                        ? "primary-button border-transparent text-white shadow-[var(--shadow-glow)]"
+                        : "border-(--accent-primary) bg-(--bg-card) text-(--accent-primary) hover:bg-(--bg-secondary)"
+                    }`}
+                  >
+                    {time}
+                  </button>
+                );
+              })
+            )}
+          </div>
+
+          <div className="mt-2.5 flex items-center justify-center gap-x-3 border-t border-(--border) pt-2 text-[8px] text-(--text-muted) lg:text-[9px]">
+            <span className="flex items-center gap-1">
+              <span className="h-2 w-4 rounded-sm border border-(--accent-primary) bg-(--bg-card)" />
+              Available
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="h-2 w-4 rounded-sm primary-button" />
+              Selected
+            </span>
+          </div>
         </div>
       </ScheduleDropdownPanel>
     </div>
