@@ -30,23 +30,42 @@ export function ServiceTimePicker({
   const scrollRef = useRef<HTMLDivElement>(null);
   const slotRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
-  useEffect(() => {
-    if (activeTime) {
-      setPeriod(getTimePeriod(activeTime));
-    }
-  }, [activeTime]);
-
-  useEffect(() => {
-    if (!open || !activeTime) return;
-    const activeSlot = slotRefs.current[activeTime];
-    activeSlot?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-  }, [open, activeTime, period]);
-
   const shortDay = dateLabel.split(",")[0] ?? dateLabel;
 
   const amTimes = useMemo(() => filterTimesByPeriod(times, "AM"), [times]);
   const pmTimes = useMemo(() => filterTimesByPeriod(times, "PM"), [times]);
   const filteredTimes = period === "AM" ? amTimes : pmTimes;
+
+  useEffect(() => {
+    if (open || !activeTime) return;
+    setPeriod(getTimePeriod(activeTime));
+  }, [activeTime, open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const frame = requestAnimationFrame(() => {
+      const scroll = scrollRef.current;
+      if (!scroll) return;
+
+      const activeInPeriod =
+        activeTime && getTimePeriod(activeTime) === period
+          ? slotRefs.current[activeTime]
+          : null;
+
+      if (activeInPeriod) {
+        activeInPeriod.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+      } else {
+        scroll.scrollLeft = 0;
+      }
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [open, activeTime, period, filteredTimes.length]);
 
   const handleSelect = useCallback(
     (time: string) => {
@@ -54,6 +73,16 @@ export function ServiceTimePicker({
       onOpenChange(false);
     },
     [onSelect, onOpenChange],
+  );
+
+  const handlePeriodChange = useCallback(
+    (next: "AM" | "PM") => {
+      if (next === period) return;
+      const nextTimes = filterTimesByPeriod(times, next);
+      if (nextTimes.length === 0) return;
+      setPeriod(next);
+    },
+    [period, times],
   );
 
   const handleToggleOpen = () => {
@@ -128,12 +157,12 @@ export function ServiceTimePicker({
         anchorRef={triggerRef}
       >
         <div className="px-2 py-2 lg:px-2.5 lg:py-2.5">
-          <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between lg:mb-2">
+          <div className="mb-2 flex items-center justify-between gap-2">
             <p className="text-[9px] font-medium text-(--text-muted) lg:text-[11px]">
-              Available times on {shortDay}
+              Showtimes on {shortDay}
             </p>
             <div
-              className="flex rounded-lg border border-(--border) bg-(--bg-secondary)/40 p-0.5"
+              className="flex shrink-0 rounded-lg border border-(--border) bg-(--bg-secondary)/40 p-0.5"
               role="tablist"
               aria-label="Time period"
             >
@@ -147,7 +176,10 @@ export function ServiceTimePicker({
                     role="tab"
                     aria-selected={active}
                     disabled={count === 0}
-                    onClick={() => setPeriod(value)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handlePeriodChange(value);
+                    }}
                     className={`rounded-md px-2 py-0.5 text-[9px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 lg:px-2.5 lg:py-1 lg:text-[10px] ${
                       active
                         ? "primary-button text-white"
@@ -165,7 +197,7 @@ export function ServiceTimePicker({
             ref={scrollRef}
             role="listbox"
             aria-label={`${period} time slots`}
-            className="flex max-h-44 flex-col gap-1 overflow-y-auto overscroll-contain lg:max-h-none lg:flex-row lg:gap-2 lg:overflow-x-auto lg:overflow-y-hidden lg:scroll-smooth lg:scrollbar-none"
+            className="flex gap-2 overflow-x-auto overscroll-x-contain scroll-smooth scrollbar-none [-webkit-overflow-scrolling:touch]"
           >
             {filteredTimes.length === 0 ? (
               <p className="w-full py-3 text-center text-[10px] text-(--text-muted) lg:text-xs">
@@ -184,7 +216,7 @@ export function ServiceTimePicker({
                     role="option"
                     aria-selected={active}
                     onClick={() => handleSelect(time)}
-                    className={`w-full rounded-lg border px-3 py-2.5 text-left text-[11px] font-medium transition-colors lg:w-auto lg:shrink-0 lg:px-3.5 lg:py-2.5 lg:text-center lg:text-xs ${
+                    className={`shrink-0 rounded-lg border px-3 py-2 text-[10px] font-semibold transition-colors lg:px-3.5 lg:py-2.5 lg:text-xs ${
                       active
                         ? "primary-button border-transparent text-white shadow-[var(--shadow-glow)]"
                         : "border-(--accent-primary) bg-(--bg-card) text-(--accent-primary) hover:bg-(--bg-secondary)"
@@ -197,7 +229,7 @@ export function ServiceTimePicker({
             )}
           </div>
 
-          <div className="mt-2.5 hidden items-center justify-center gap-x-3 border-t border-(--border) pt-2 text-[8px] text-(--text-muted) lg:flex lg:text-[9px]">
+          <div className="mt-2.5 flex items-center justify-center gap-x-3 border-t border-(--border) pt-2 text-[8px] text-(--text-muted) lg:text-[9px]">
             <span className="flex items-center gap-1">
               <span className="h-2 w-4 rounded-sm border border-(--accent-primary) bg-(--bg-card)" />
               Available

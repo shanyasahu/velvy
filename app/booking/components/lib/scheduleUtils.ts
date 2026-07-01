@@ -36,7 +36,7 @@ export function formatCollapsedSchedule(day: BookingDay | undefined, time: strin
 }
 
 export function getTimePeriod(time: string): "AM" | "PM" {
-  return time.toUpperCase().includes("PM") ? "PM" : "AM";
+  return /\bPM\b/i.test(time.trim()) ? "PM" : "AM";
 }
 
 export function filterTimesByPeriod(times: string[], period: "AM" | "PM"): string[] {
